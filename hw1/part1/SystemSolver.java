@@ -1,4 +1,4 @@
 
 public interface SystemSolver {
-    Matrix solve(Matrix matrix);
+    void solve(double[][] matrix);
 }

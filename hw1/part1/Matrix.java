@@ -12,7 +12,7 @@ public class Matrix {
                 table[i][j] = 0;
     }
 
-    public void set(int n, int i, int j) {
+    public void put(int i, int j, int n) {
         table[i][j] = n;
     }
 
