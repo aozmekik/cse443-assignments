@@ -2,6 +2,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+// TODO. list.
+// refactor and stole them better.
+// check solvability. let others check solvability? 
+// write comment.
+
 public class LinearSolverDeluxe {
     private SystemSolver systemSolver;
     private double[][] matrix;
@@ -26,16 +31,14 @@ public class LinearSolverDeluxe {
             parseLine(lines[i].replaceAll("\\s+", ""), i);
         }
 
-        // TODO. check solvability.
     }
 
     public void solution() {
-        systemSolver.solve(matrix);
-        String sol = "[";
+        double[] A = systemSolver.solve(matrix);
+        System.out.printf("[");
         for (int i = 0; i < matrix.length - 1; i++)
-            sol += Double.toString(matrix[matrix.length - 1][i]) + (i + 1 < matrix.length - 1? ", " : "");
-        sol += "]";
-        System.out.println(sol);
+            System.out.printf("%.4f" + (i + 1 < matrix.length - 1 ? ", " : ""), A[i]);
+        System.out.println("]");
     }
 
     private void parseLine(String line, int x) {

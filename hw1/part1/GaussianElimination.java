@@ -1,13 +1,11 @@
-public class GaussianElimination implements SystemSolver {
-    private static final double EPSILON = 1e-10;
 
-    // Gaussian elimination with partial pivoting
-    private static double[] lsolve(double[][] A, double[] b) {
-        int n = b.length;
+public class GaussianElimination implements SystemSolver {
+
+    private static double[] gaussianSolve(double[][] A, double[] B) {
+        int n = B.length;
 
         for (int p = 0; p < n; p++) {
 
-            // find pivot row and swap
             int max = p;
             for (int i = p + 1; i < n; i++) {
                 if (Math.abs(A[i][p]) > Math.abs(A[max][p])) {
@@ -17,52 +15,46 @@ public class GaussianElimination implements SystemSolver {
             double[] temp = A[p];
             A[p] = A[max];
             A[max] = temp;
-            double t = b[p];
-            b[p] = b[max];
-            b[max] = t;
+            double t = B[p];
+            B[p] = B[max];
+            B[max] = t;
 
-            // singular or nearly singular
-            if (Math.abs(A[p][p]) <= EPSILON) {
-                throw new ArithmeticException("Matrix is singular or nearly singular");
+            if (A[p][p] == 0) {
+                throw new IllegalArgumentException("Bad Matrix: Matrix is singular!");
             }
 
-            // pivot within A and b
             for (int i = p + 1; i < n; i++) {
                 double alpha = A[i][p] / A[p][p];
-                b[i] -= alpha * b[p];
+                B[i] -= alpha * B[p];
                 for (int j = p; j < n; j++) {
                     A[i][j] -= alpha * A[p][j];
                 }
             }
         }
 
-        // back substitution
         double[] x = new double[n];
         for (int i = n - 1; i >= 0; i--) {
             double sum = 0.0;
             for (int j = i + 1; j < n; j++) {
                 sum += A[i][j] * x[j];
             }
-            x[i] = (b[i] - sum) / A[i][i];
+            x[i] = (B[i] - sum) / A[i][i];
         }
         return x;
     }
 
     @Override
-    public void solve(double[][] matrix) {
-        int n = matrix.length;
+    public double[] solve(double[][] A) {
+        int n = A.length;
         double a[][] = new double[n - 1][n - 1];
         double b[] = new double[n - 1];
 
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - 1; j++)
-                a[i][j] = matrix[i][j];
-            b[i] = matrix[i][n - 1];
+                a[i][j] = A[i][j];
+            b[i] = A[i][n - 1];
         }
 
-        double c[] = lsolve(a, b);
-
-        for (int i = 0; i < n - 1; i++)
-            matrix[n - 1][i] = c[i];
+        return gaussianSolve(a, b);
     }
 }

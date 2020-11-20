@@ -1,4 +1,6 @@
 
-public interface SystemSolver {
-    void solve(double[][] matrix);
+public interface SystemSolver{
+    double[] solve(double[][] A) throws IllegalArgumentException;
 }
+
+
