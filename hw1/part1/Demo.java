@@ -1,3 +1,14 @@
+/**
+ * <h1>Demo.</h1> Demonstrates the LinearSolverDeluxe class.
+ * <p>
+ * 
+ * @see LinearSolverDeluxe.
+ *
+ * @author drh0use1
+ * @version 1.0
+ * @since 2020-11-21
+ */
+
 public class Demo {
     public static void main(String[] args) {
         String[] files = { "test/input0.txt", "test/input1.txt", "test/input2.txt", "test/input3.txt",
