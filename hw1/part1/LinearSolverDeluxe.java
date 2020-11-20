@@ -2,24 +2,59 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-// TODO. list.
-// refactor and stole them better.
-// check solvability. let others check solvability? 
-// write comment.
+/**
+ * <h1>LinearSolverDeluxe.</h1> It admits as input from the user a system of
+ * linear equations and outputs its solution, if it exists, or an error message
+ * otherwise.
+ * <p>
+ * <b>Note:</b> Check Demo and input files for input format.
+ * 
+ * @see SystemSolver.java
+ *
+ * @author drh0use1
+ * @version 1.0
+ * @since 2020-11-21
+ */
+
+// TODO.
+// demo
+// test
+// javadoc
 
 public class LinearSolverDeluxe {
     private SystemSolver systemSolver;
     private double[][] matrix;
 
+    /**
+     * Creates a linear solver object with the given system solver method.
+     * 
+     * @param systemSolver Linear equation solver method. @see SystemSolver.java
+     */
     public LinearSolverDeluxe(SystemSolver systemSolver) {
         this.systemSolver = systemSolver;
     }
 
-    public void read() {
+    /**
+     * Changes the linear system solver method dynamically in runtime.
+     * 
+     * @param systemSolver
+     */
+    public void setSystemSolver(SystemSolver systemSolver) {
+        this.systemSolver = systemSolver;
+    }
+
+    /**
+     * Reads the given input file containing linear system written in the proper
+     * predefined format
+     * 
+     * @param file Input file containing linear system.
+     * @see Demo.java and input.txt for the input format.
+     */
+    public void read(String file) {
         String content = "";
 
         try {
-            content = new String(Files.readAllBytes(Paths.get("input.txt")));
+            content = new String(Files.readAllBytes(Paths.get(file)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -33,6 +68,9 @@ public class LinearSolverDeluxe {
 
     }
 
+    /**
+     * Prints the linear equation solution to screen.
+     */
     public void solution() {
         double[] A = systemSolver.solve(matrix);
         System.out.printf("[");

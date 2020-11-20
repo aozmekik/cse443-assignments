@@ -1,7 +1,26 @@
+/**
+ * <h1>MatrixInversion.</h1> Inversion method implementing SystemSolver
+ * interface to solve linear equation system.
+ * <p>
+ * 
+ * @see SystemSolver.java
+ *
+ * @author drh0use1
+ * @version 1.0
+ * @since 2020-11-21
+ */
 
 public class MatrixInversion implements SystemSolver {
     private static int N = 0;
 
+    /**
+     * Multiplicator for matrices. Multiplies matrix A and B, returns the result
+     * matrix.
+     * 
+     * @param A First matrix operand.
+     * @param B Second matrix operand.
+     * @return Result matrix.
+     */
     private static double[][] mult(double[][] A, double[][] B) {
         int Ax = A.length;
         int Ay = A[0].length;
@@ -26,6 +45,11 @@ public class MatrixInversion implements SystemSolver {
         return C;
     }
 
+    /**
+     * Cofactor method. This method is a helper/utility method for both
+     * in the calculation of determinant and adjoint matrix. It collects the
+     * cofactors in the matrix. 
+     */
     private static void co(double A[][], double B[][], int x, int y, int n) {
         int i = 0, j = 0;
 
@@ -45,6 +69,11 @@ public class MatrixInversion implements SystemSolver {
         }
     }
 
+    /**
+     * Finds the determinant of matrix recursively.
+     * @param A Input matrix.
+     * @return n Determinant.
+     */
     private static double det(double A[][], int n) {
         int determinant = 0;
         if (n == 1)
@@ -64,6 +93,11 @@ public class MatrixInversion implements SystemSolver {
         return determinant;
     }
 
+    /**
+     * Returns the adjoint of the given matrix.
+     * @param A Input matrix.
+     * @return Adjoint.
+     */
     private static double[][] adj(double A[][]) {
         double[][] adjoint = new double[N][N];
         if (N == 1) {
@@ -85,6 +119,11 @@ public class MatrixInversion implements SystemSolver {
         return adjoint;
     }
 
+    /**
+     * Gets the inverse of given matrix.
+     * @param A Input matrix.
+     * @return Inverse of A.
+     */
     private static double[][] inv(double A[][]) {
         double[][] inverse = new double[A.length][A.length];
         double det = det(A, N);
@@ -100,6 +139,12 @@ public class MatrixInversion implements SystemSolver {
         return inverse;
     }
 
+    /**
+     * Solves the linear equation with the matrix inversion method.
+     * @param A Input matrix.
+     * @return Solution.
+     * @see SystemSolver.java
+     */
     @Override
     public double[] solve(double[][] A) {
         N = A.length;
@@ -118,7 +163,7 @@ public class MatrixInversion implements SystemSolver {
         double[][] D = mult(inv(B), C);
 
         double[] result = new double[D.length];
-        for (int i = 0; i<D.length; ++i)
+        for (int i = 0; i < D.length; ++i)
             result[i] = D[i][0];
         return result;
     }
