@@ -1,3 +1,15 @@
+/**
+ * <h1>Demo.</h1> Demonstrates the Suits and other EquipmentDecorater variants.
+ * <p>
+ * 
+ * @see Suit.java
+ * @see EquipmentDecorator.java
+ *
+ * @author drh0use1
+ * @version 1.0
+ * @since 2020-11-21
+ */
+
 public class Demo {
     public static void print(Suit suit) {
         System.out.println("\t>" + suit.description() + ": " + suit.cost() + "k TL, " + suit.weight() + "kg");
