@@ -12,6 +12,8 @@
 
 public class GaussianElimination implements SystemSolver {
 
+    private static final double eps = 1e-10; 
+
     /**
      * Gaussian Elimination method implementation.
      * 
@@ -37,8 +39,8 @@ public class GaussianElimination implements SystemSolver {
             B[p] = B[max];
             B[max] = t;
 
-            if (A[p][p] == 0)
-                throw new IllegalArgumentException("Bad Matrix: Matrix is singular!");
+            if (A[p][p] <= eps)
+                throw new IllegalArgumentException("Bad Matrix: Matrix is not solvable!");
 
             for (int i = p + 1; i < n; i++) {
                 double alpha = A[i][p] / A[p][p];

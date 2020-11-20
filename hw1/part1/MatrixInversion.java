@@ -128,7 +128,7 @@ public class MatrixInversion implements SystemSolver {
         double[][] inverse = new double[A.length][A.length];
         double det = det(A, N);
         if (det == 0)
-            throw new IllegalArgumentException("Bad Matrix: Matrix is singular!");
+            throw new IllegalArgumentException("Bad Matrix: Matrix is not solvable!");
 
         double[][] adjoint = adj(A);
 

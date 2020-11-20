@@ -50,13 +50,13 @@ public class LinearSolverDeluxe {
      * @param file Input file containing linear system.
      * @see Demo.java and input.txt for the input format.
      */
-    public void read(String file) {
+    public void read(String file) throws IllegalArgumentException {
         String content = "";
 
         try {
             content = new String(Files.readAllBytes(Paths.get(file)));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException("Bad Input: " + e.toString());
         }
 
         String[] lines = content.split("\\r?\\n");
@@ -81,6 +81,8 @@ public class LinearSolverDeluxe {
 
     private void parseLine(String line, int x) {
         String[] items = line.split(",");
+        if (matrix.length != items.length)
+            throw new IllegalArgumentException("Bad Input: Row and column number does not match!");
         for (int i = 0; i < items.length; i++)
             matrix[x][i] = Integer.parseInt(items[i]);
     }
