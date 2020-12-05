@@ -6,8 +6,9 @@ public class CpuAndRam4 extends CpuAndRam {
         super(info);
     }
 
-    public String spec() {
-        return "4 cores, " + toString();
+    @Override
+    public String toString() {
+        return "4 cores, " + super.toString();
     }
 
 }

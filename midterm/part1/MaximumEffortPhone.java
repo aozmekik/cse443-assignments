@@ -8,7 +8,7 @@ public class MaximumEffortPhone extends Phone {
 
     @Override
     public void prepare() {
-        System.out.println("Preparing " + name);
+        System.out.println("\t>Preparing " + name);
         display = ingredientFactory.createDisplay("5.5 inches");
         battery = ingredientFactory.createBattery("27h, 3600mAh");
         cpuAndRam = ingredientFactory.createCpuAndRam("2.8GHz, 8GB");

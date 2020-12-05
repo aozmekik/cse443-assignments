@@ -11,6 +11,4 @@ public abstract class Display {
     public String toString() {
         return this.inch;
     }
-
-    public abstract String spec();
 }

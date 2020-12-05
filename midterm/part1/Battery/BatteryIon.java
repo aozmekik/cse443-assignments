@@ -4,9 +4,11 @@ public class BatteryIon extends Battery {
     public BatteryIon(String lifetimeAndVolt) {
         super(lifetimeAndVolt);
     }
-    public String spec()
+
+    @Override
+    public String toString()
     {
-        return "Lithium-Ion, " + toString();
+        return "Lithium-Ion, " + super.toString();
     }
     
 

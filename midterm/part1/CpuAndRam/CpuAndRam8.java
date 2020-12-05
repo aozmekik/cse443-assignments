@@ -7,7 +7,7 @@ public class CpuAndRam8 extends CpuAndRam {
     }
 
     public String spec() {
-        return "8 cores, " + toString();
+        return "8 cores, " + super.toString();
     }
 
 }

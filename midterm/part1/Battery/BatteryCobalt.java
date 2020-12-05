@@ -4,9 +4,11 @@ public class BatteryCobalt extends Battery {
     public BatteryCobalt(String lifetimeAndVolt) {
         super(lifetimeAndVolt);
     }
-    public String spec()
+
+    @Override
+    public String toString()
     {
-        return "Lithium-Cobalt, " + toString();
+        return "Lithium-Cobalt, " + super.toString();
     }
     
 

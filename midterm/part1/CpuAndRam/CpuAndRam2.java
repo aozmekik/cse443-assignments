@@ -6,8 +6,9 @@ public class CpuAndRam2 extends CpuAndRam {
         super(info);
     }
 
-    public String spec() {
-        return "2 cores, " + toString();
+    @Override
+    public String toString() {
+        return "2 cores, " + super.toString();
     }
 
 }

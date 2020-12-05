@@ -6,10 +6,12 @@ public abstract class AbstractPhoneFactory {
 
         phone = preparePhone(model);
         
+        phone.prepare();
+
         // production routine
         phone.attachBattery();
         phone.attachDisplay();
-        phone.attachBattery();
+        phone.attachCpuAndRam();
         phone.attachStorage();
         phone.attachCamera();
         phone.encloseCase();

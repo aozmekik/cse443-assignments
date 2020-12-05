@@ -7,8 +7,8 @@ public class Storage128 extends Storage {
     }
 
     @Override
-    public String spec() {
-        return "Max 128GB, " + toString();
+    public String toString() {
+        return "Max 128GB, " + super.toString();
     }
 
 }

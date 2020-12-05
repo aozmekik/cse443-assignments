@@ -12,6 +12,4 @@ public abstract class Storage {
         return info;
     }
 
-    public abstract String spec();
-
 }

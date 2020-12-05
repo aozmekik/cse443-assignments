@@ -7,8 +7,8 @@ public class Display24 extends Display {
     }
 
     @Override
-	public String spec() {
-		return "24 bit," + toString();
+	public String toString() {
+		return "24 bit," + super.toString();
 	}
 
 }

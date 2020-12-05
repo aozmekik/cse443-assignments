@@ -8,7 +8,7 @@ public class IIAmanIflasPhone extends Phone {
 
     @Override
     public void prepare() {
-        System.out.println("Preparing " + name);
+        System.out.println("\t>Preparing " + name);
         display = ingredientFactory.createDisplay("4.5 inches");
         battery = ingredientFactory.createBattery("16h, 2000mAh");
         cpuAndRam = ingredientFactory.createCpuAndRam("2.2GHz, 4GB");

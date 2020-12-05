@@ -8,7 +8,7 @@ public class IflasDeluxePhone extends Phone {
 
     @Override
     public void prepare() {
-        System.out.println("Preparing " + name);
+        System.out.println("\t>Preparing " + name);
         display = ingredientFactory.createDisplay("5.3 inches");
         battery = ingredientFactory.createBattery("20h, 2800mAh");
         cpuAndRam = ingredientFactory.createCpuAndRam("2.2GHz, 6GB");

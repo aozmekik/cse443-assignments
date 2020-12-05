@@ -7,8 +7,8 @@ public class Display32 extends Display {
     }
 
     @Override
-	public String spec() {
-		return "32 bit," + toString();
+	public String toString() {
+		return "32 bit," + super.toString();
 	}
 
 }

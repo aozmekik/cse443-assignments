@@ -7,8 +7,8 @@ public class Storage32 extends Storage {
     }
 
     @Override
-    public String spec() {
-        return "Max 32GB, " + toString();
+    public String toString() {
+        return "Max 32GB, " + super.toString();
     }
     
 }

@@ -22,27 +22,27 @@ public abstract class Phone {
     }
 
     public final void attachCpuAndRam() {
-        System.out.println("\tAttaching cpu & ram to the board: " + cpuAndRam);
+        System.out.println("\t\t>Attaching cpu & ram to the board: " + cpuAndRam);
     }
 
     public final void attachDisplay() {
-        System.out.println("\tAttaching display: " + display);
+        System.out.println("\t\t>Attaching display: " + display);
     }
 
     public final void attachBattery() {
-        System.out.println("\tAttaching battery: " + battery);
+        System.out.println("\t\t>Attaching battery: " + battery);
     }
 
     public final void attachStorage() {
-        System.out.println("\tAttaching storage: " + storage);
+        System.out.println("\t\t>Attaching storage: " + storage);
     }
 
     public final void attachCamera() {
-        System.out.println("\tAttaching camera: " + camera);
+        System.out.println("\t\t>Attaching camera: " + camera);
     }
 
     public final void encloseCase() {
-        System.out.println("\tEnclosing the phone case: " + safe);
+        System.out.println("\t\t>Enclosing the phone case: " + safe);
     }
 
 }

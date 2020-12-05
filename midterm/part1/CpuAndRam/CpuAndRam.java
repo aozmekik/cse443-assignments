@@ -11,7 +11,4 @@ public abstract class CpuAndRam {
     public String toString() {
         return info;
     }
-    
-    public abstract String spec();
-
 }

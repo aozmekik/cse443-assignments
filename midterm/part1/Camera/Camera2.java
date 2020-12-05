@@ -7,8 +7,8 @@ public class Camera2 extends Camera {
     }
 
     @Override
-    public String spec() {
-        return "Opt. zoom x2, " + toString();
+    public String toString() {
+        return "Opt. zoom x2, " + super.toString();
     }
     
 }

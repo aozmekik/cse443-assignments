@@ -11,6 +11,4 @@ public abstract class Case {
     public String toString() {
         return info;
     }
-
-    public abstract String spec();
 }

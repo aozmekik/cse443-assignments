@@ -7,8 +7,8 @@ public class Case1 extends Case {
     }
 
     @Override
-    public String spec() {
-        return "Waterproof up to 1m, " + toString();
+    public String toString() {
+        return "Waterproof up to 1m, " + super.toString();
     }
 
 }

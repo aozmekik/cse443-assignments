@@ -1,12 +1,16 @@
 package Battery;
 
 public abstract class Battery {
-    private String lifetimeAndVolt;
+    private String info;
 
     public Battery(String lifetimeAndVolt) {
-        this.lifetimeAndVolt = lifetimeAndVolt;
+        this.info = lifetimeAndVolt;
     }
 
-    public abstract String spec();
+    @Override
+    public String toString()
+    {
+        return info;
+    }
 
 }

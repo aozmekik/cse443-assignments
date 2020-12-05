@@ -12,6 +12,4 @@ public abstract class Camera {
         return info;
     }
 
-    public abstract String spec();
-
 }
