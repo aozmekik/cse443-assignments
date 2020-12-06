@@ -29,7 +29,7 @@ public class Database {
             }
         } else {
             if (db.containsKey(id)) {
-                System.out.printf("ALTER (REMOVE): Removed  row %d to database\n", id);
+                System.out.printf("ALTER (REMOVE): Removed row %d to database\n", id);
                 db.remove(id);
             } else {
                 System.out.printf("ALTER (REMOVE): Error! Database doesn't contain the id: %d\n", id);

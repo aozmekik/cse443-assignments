@@ -22,7 +22,7 @@ public class DatabaseManager {
         }
 
         if (fail) {
-            System.out.printf("Rolling back to a previous state in database...");
+            System.out.printf("Rolling back to a previous state in database...\n");
             while (!operationStack.empty())
                 operationStack.pop().reverse();
         }
