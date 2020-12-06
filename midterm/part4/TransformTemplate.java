@@ -3,11 +3,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public abstract class TransformTemplate {
     protected double[] numbers = null;
     protected int N = 0;
-    protected String out = "";
+    protected String out = null;
 
     protected void read(String file) throws IllegalArgumentException {
         String content = "";
@@ -43,7 +44,9 @@ public abstract class TransformTemplate {
 
     public final void transform(String inFile, String outFile) {
         read(inFile);
+        Objects.requireNonNull(numbers);
         transform();
+        Objects.requireNonNull(out);
         write(outFile);
     }
 

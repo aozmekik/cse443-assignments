@@ -2,22 +2,18 @@
 public class DFT extends TransformTemplate {
 
     @Override
-    protected void transform() { // FIXME. change k & t.
-        double[] real = new double[N];
-        double[] imag = new double[N];
+    protected void transform() {
+        out = "";
 
-        for (int k = 0; k < N; ++k) {
+        for (int i = 0; i < N; ++i) {
             double realSum = 0;
             double imagSum = 0;
-            for (int t = 0; t < N; ++t) {
-                double angle = 2 * Math.PI * t * k / N;
-                realSum += numbers[t] * Math.cos(angle);
-                imagSum += -numbers[t] * Math.sin(angle);
+            for (int j = 0; j < N; ++j) {
+                double angle = 2 * Math.PI * j * i / N;
+                realSum += numbers[j] * Math.cos(angle);
+                imagSum += -numbers[j] * Math.sin(angle);
             }
-
-            real[k] = realSum;
-            imag[k] = imagSum;
-            out += String.format("%f + %fi\n", real[k], imag[k]);
+            out += String.format("%.4f + %.4fi\n", realSum, imagSum);
         }
 
     }
