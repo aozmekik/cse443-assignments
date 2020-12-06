@@ -32,7 +32,7 @@ public abstract class TransformTemplate {
         try {
             new File(file).createNewFile();
             FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(out);
+            fileWriter.write(out + verbose());
             fileWriter.close();
             System.out.println("Done! Check " + file);
         } catch (IOException e) {
@@ -40,7 +40,11 @@ public abstract class TransformTemplate {
             e.printStackTrace();
         }
     }
-    // TODO. the time of execution?
+    
+    protected String verbose()
+    {
+        return "";
+    }
 
     public final void transform(String inFile, String outFile) {
         read(inFile);
