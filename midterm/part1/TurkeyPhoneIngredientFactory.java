@@ -11,6 +11,14 @@ import Display.Display32;
 import Storage.Storage;
 import Storage.Storage128;
 
+/**
+ * TurkeyPhoneIngredientFactory. Represents an ingredient factory which creates
+ * different kind of ingredients by implementing the PhoneIngredientFactory
+ * interface.
+ * 
+ * @see PhoneIngredientFactory.
+ */
+
 public class TurkeyPhoneIngredientFactory implements PhoneIngredientFactory {
 
     @Override

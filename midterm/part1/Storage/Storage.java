@@ -1,5 +1,11 @@
 package Storage;
 
+/**
+ * Storage. Represents the one ingredient of Phone.
+ * 
+ * @see Phone.
+ */
+
 public abstract class Storage {
     private String info;
 

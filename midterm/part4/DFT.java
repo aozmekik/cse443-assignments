@@ -1,4 +1,9 @@
 
+/**
+ * DFT. Discrete Fourier Transform implementation. Might print verbose output if
+ * the user wishes.
+ */
+
 public class DFT extends TransformTemplate {
     private double elapsedTime;
     private boolean print;
@@ -12,7 +17,7 @@ public class DFT extends TransformTemplate {
     }
 
     @Override
-    protected void transform() {
+    public void transform() {
         out = "";
         long start = System.nanoTime();
         for (int i = 0; i < N; ++i) {

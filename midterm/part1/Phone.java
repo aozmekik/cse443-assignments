@@ -5,6 +5,11 @@ import CpuAndRam.CpuAndRam;
 import Display.Display;
 import Storage.Storage;
 
+/**
+ * Phone. Represent the Phone backbone. Has different kind of ingredients which
+ * can be from any instance. Provides and simple interface for phone production.
+ */
+
 public abstract class Phone {
     protected String name;
 

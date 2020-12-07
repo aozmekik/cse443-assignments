@@ -5,6 +5,11 @@ import CpuAndRam.CpuAndRam;
 import Display.Display;
 import Storage.Storage;
 
+/**
+ * PhoneIngredientFactory. Provides and interface for those who wants to become
+ * a ingredient factory. 
+ */
+
 public interface PhoneIngredientFactory {
     public Display createDisplay(String inch);
 

@@ -1,5 +1,11 @@
 package Case;
 
+/**
+ * Case. Represents the one ingredient of Phone.
+ * 
+ * @see Phone.
+ */
+
 public abstract class Case {
     private String info;
 

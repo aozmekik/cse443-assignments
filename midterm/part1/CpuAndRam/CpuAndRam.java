@@ -1,5 +1,11 @@
 package CpuAndRam;
 
+/**
+ * CpuAndRam. Represents the one ingredient of Phone.
+ * 
+ * @see Phone.
+ */
+
 public abstract class CpuAndRam {
     private String info;
 

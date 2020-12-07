@@ -1,3 +1,10 @@
+
+/**
+ * PhoneFactory. General phone factory class. Gets the model name and ingredient
+ * factory instance. Regarding to those two information produces a phone from
+ * this factory.
+ */
+
 public class PhoneFactory extends AbstractPhoneFactory {
     public enum Region {
         TURKEY, EU, GLOBAL

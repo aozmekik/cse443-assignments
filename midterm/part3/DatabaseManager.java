@@ -2,6 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * DatabaseManager. Manages the Database. In case of fail rolls back the
+ * database to a previous state.
+ * 
+ */
+
 public class DatabaseManager {
     private List<Operation> operationList = new ArrayList<Operation>();
 
@@ -12,7 +18,7 @@ public class DatabaseManager {
     public void performOperations() {
         Stack<Operation> operationStack = new Stack<Operation>();
         boolean fail = true;
-        
+
         for (Operation operation : operationList) {
             fail = operation.operate();
             if (fail)

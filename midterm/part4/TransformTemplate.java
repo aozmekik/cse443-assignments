@@ -5,6 +5,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+/**
+ * TransformTemplate. Simple implementation of Template Design Pattern. Applying
+ * a transform on a series of real numbers. Derived class might override the
+ * read & write methods, if he wishes to get input or give output in some other
+ * ways. But it's not recommended.
+ */
+
 public abstract class TransformTemplate {
     protected double[] numbers = null;
     protected int N = 0;
@@ -26,7 +33,7 @@ public abstract class TransformTemplate {
             numbers[i] = Double.parseDouble(tokens[i]);
     }
 
-    protected abstract void transform();
+    public abstract void transform();
 
     protected void write(String file) {
         try {
@@ -40,9 +47,8 @@ public abstract class TransformTemplate {
             e.printStackTrace();
         }
     }
-    
-    protected String verbose()
-    {
+
+    protected String verbose() {
         return "";
     }
 

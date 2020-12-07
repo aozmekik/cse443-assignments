@@ -1,3 +1,8 @@
+/**
+ * SelectOperation. Selecting operation on the database.
+ * @see Operation
+ */
+
 public class SelectOperation implements Operation {
     private Database database;
     private int id;
@@ -8,7 +13,7 @@ public class SelectOperation implements Operation {
     }
 
     @Override
-    public boolean operate(){
+    public boolean operate() {
         return database.select(id);
     }
 
@@ -16,5 +21,5 @@ public class SelectOperation implements Operation {
     public boolean reverse() {
         return database.select(id);
     }
-    
+
 }

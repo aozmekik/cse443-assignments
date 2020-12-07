@@ -1,5 +1,9 @@
 import java.util.HashMap;
 
+/**
+ * Basic implementation of Database to represent simple operations.
+ */
+
 public class Database {
     private HashMap<Integer, Integer> db = new HashMap<Integer, Integer>();
 

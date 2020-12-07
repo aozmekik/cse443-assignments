@@ -1,3 +1,9 @@
+/**
+ * AlterOperation.
+ * Altering operation on the database.
+ * @see Operation
+ */
+
 public class AlterOperation implements Operation {
     private Database database;
     private int id;

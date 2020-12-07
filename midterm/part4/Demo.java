@@ -1,3 +1,7 @@
+/**
+ * Demonstration of the Template Design Pattern.
+ */
+
 public class Demo {
     public static void main(String[] args) {
         TransformTemplate dft = new DFT();

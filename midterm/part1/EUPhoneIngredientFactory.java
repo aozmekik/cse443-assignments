@@ -11,6 +11,14 @@ import Display.Display24;
 import Storage.Storage;
 import Storage.Storage64;
 
+/**
+ * EUPhoneIngredientFactory. Represents an ingredient factory which creates
+ * different kind of ingredients by implementing the PhoneIngredientFactory
+ * interface.
+ * 
+ * @see PhoneIngredientFactory.
+ */
+
 public class EUPhoneIngredientFactory implements PhoneIngredientFactory {
 
     @Override

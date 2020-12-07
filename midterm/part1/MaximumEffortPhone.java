@@ -1,9 +1,16 @@
+/**
+ * MaximumEffortPhone. Represents the one kind of a phone, a model which has
+ * different kind of ingredient specifications.
+ * 
+ * @see Phone.
+ */
+
 public class MaximumEffortPhone extends Phone {
     private PhoneIngredientFactory ingredientFactory;
 
     public MaximumEffortPhone(PhoneIngredientFactory ingredientFactory) {
         super("MaximumEffort");
-       this.ingredientFactory = ingredientFactory;
+        this.ingredientFactory = ingredientFactory;
     }
 
     @Override

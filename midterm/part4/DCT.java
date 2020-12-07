@@ -1,8 +1,12 @@
 
+/**
+ * DCT. Discrete Cosine Transform implementation.
+ */
+
 public class DCT extends TransformTemplate {
 
     @Override
-    protected void transform() {
+    public void transform() {
         double factor = Math.PI / N;
         out = "";
         for (int i = 0; i < N; ++i) {

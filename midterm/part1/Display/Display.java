@@ -1,5 +1,11 @@
 package Display;
 
+/**
+ * Display. Represents the one ingredient of Phone.
+ * 
+ * @see Phone.
+ */
+
 public abstract class Display {
     private String inch;
 

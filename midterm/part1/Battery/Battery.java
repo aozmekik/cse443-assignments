@@ -1,5 +1,11 @@
 package Battery;
 
+/**
+ * Battery. Represents the one ingredient of Phone.
+ * 
+ * @see Phone
+ */
+
 public abstract class Battery {
     private String info;
 
@@ -8,8 +14,7 @@ public abstract class Battery {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return info;
     }
 

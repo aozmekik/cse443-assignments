@@ -1,3 +1,8 @@
+/**
+ * Basic implementation of Adapter Design Pattern.
+ * Adapts the old TurboPayment class to ModernPayment.
+ */
+
 public class TurboPaymentAdapter implements ModernPayment {
     private TurboPayment turboPayment;
 

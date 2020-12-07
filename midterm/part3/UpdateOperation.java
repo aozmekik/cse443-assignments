@@ -1,3 +1,10 @@
+
+/**
+ * UpdateOperation. Selecting operation on the database.
+ * @see Operation
+ */
+
+
 public class UpdateOperation implements Operation {
     private Database database;
     private int id;

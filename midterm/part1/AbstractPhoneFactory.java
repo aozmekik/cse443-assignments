@@ -1,3 +1,12 @@
+/**
+ * AbstractPhoneFactory. Represent the one component of Abstract Factory Design
+ * Pattern. There is a production routine followed here. Any other concrete
+ * factories must derive AbstractPhoneFactory.
+ * 
+ * @see Phone.
+ * @see PhoneFactory.
+ */
+
 public abstract class AbstractPhoneFactory {
     protected abstract Phone preparePhone(String model);
 
@@ -5,7 +14,7 @@ public abstract class AbstractPhoneFactory {
         Phone phone;
 
         phone = preparePhone(model);
-        
+
         phone.prepare();
 
         // production routine
@@ -15,7 +24,7 @@ public abstract class AbstractPhoneFactory {
         phone.attachStorage();
         phone.attachCamera();
         phone.encloseCase();
-        
+
         return phone;
     }
 }

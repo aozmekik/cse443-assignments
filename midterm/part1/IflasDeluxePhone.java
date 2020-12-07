@@ -1,3 +1,10 @@
+
+/**
+ * IflasDeluxePhone. Represents the one kind of a phone, a model which has
+ * different kind of ingredient specifications.
+ * @see Phone.
+ */
+
 public class IflasDeluxePhone extends Phone {
     private PhoneIngredientFactory ingredientFactory;
 
