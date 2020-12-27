@@ -47,4 +47,8 @@ public class TrafficLight {
     public State getGreenState() {
         return greenState;
     }
+
+    public void reset() {
+        state = redState;
+    }
 }

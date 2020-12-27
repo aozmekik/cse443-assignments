@@ -7,7 +7,7 @@ public class GreenState extends AbstractState {
 
     @Override
     public void toYellow() {
-        switchTo(trafficLight.getRedState(), timeout_X);
+        switchTo(trafficLight.getYellowState(), timeout_X);
     }
     
 
