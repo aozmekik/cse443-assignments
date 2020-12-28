@@ -1,3 +1,10 @@
+/**
+ * Concrete state GreenState.
+ * 
+ * Has only transition to YellowState, hence only implements toYellow method.
+ * Default timeout for transition is set to 60 sec.
+ */
+
 public class GreenState extends AbstractState {
 
     public GreenState(TrafficLight trafficLight) {
@@ -9,5 +16,5 @@ public class GreenState extends AbstractState {
     public void toYellow() {
         switchTo(trafficLight.getYellowState(), getTimeout());
     }
-    
+
 }

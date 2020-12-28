@@ -1,3 +1,7 @@
+/**
+ * The known interface of database tables in the company.
+ */
+
 public interface ITable {
     public Object getElementAt(int row, int column);
 

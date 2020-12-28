@@ -1,3 +1,14 @@
+/**
+ * Some of the methods in the state interface should not be active, as there is
+ * no direct transition between some states. This class was written to reuse
+ * with an abstarct state class, to avoid making these all the same one at a
+ * time in each state.
+ * 
+ * In default all transitions fail. Child state must reimplement the appropriate
+ * transition methods.
+ * 
+ */
+
 public class AbstractState implements State {
     protected TrafficLight trafficLight;
     private int timeout;
@@ -6,6 +17,9 @@ public class AbstractState implements State {
         this.trafficLight = trafficLight;
     }
 
+    /**
+     * Simulates the switching from state to states.
+     */
     protected void switchTo(State newState, int sec) {
         System.out.printf("Switching from %s to %s in %d sec\n", trafficLight.getState(), newState, sec);
         trafficLight.setState(newState);

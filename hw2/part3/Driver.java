@@ -2,6 +2,8 @@ public class Driver {
     public static void main(String[] args) {
         HiTech hiTech = new HiTech();
 
+        // Demo for state design pattern working correctly.
+
         TrafficLight trafficLight = new TrafficLight(hiTech);
 
         System.out.println("SUCCESSFULL PATH");
@@ -55,6 +57,7 @@ public class Driver {
         trafficLight.toGreen();
         System.out.println("\n-----\tEND\t-----\n");
 
+        // Demo for observer design pattern working correctly.
 
         hiTech.changeDetected(true);
         System.out.println("SUCCESSFULL PATH");
