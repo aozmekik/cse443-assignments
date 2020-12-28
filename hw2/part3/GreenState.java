@@ -1,14 +1,13 @@
 public class GreenState extends AbstractState {
-    private int timeout_X = 60;
 
     public GreenState(TrafficLight trafficLight) {
         super(trafficLight);
+        setTimeout(60);
     }
 
     @Override
     public void toYellow() {
-        switchTo(trafficLight.getYellowState(), timeout_X);
+        switchTo(trafficLight.getYellowState(), getTimeout());
     }
     
-
 }

@@ -1,16 +1,19 @@
-public class TrafficLight {
+public class TrafficLight extends Observer {
     private State redState;
     private State yellowState;
     private State greenState;
 
     private State state;
 
-    public TrafficLight() {
+    public TrafficLight(HiTech subject) {
         redState = new RedState(this);
         yellowState = new YellowState(this);
         greenState = new GreenState(this);
 
         state = redState;
+        
+        this.subject = subject;
+        this.subject.attach(this);
     }
 
     public void setState(State state) {
@@ -50,5 +53,10 @@ public class TrafficLight {
 
     public void reset() {
         state = redState;
+    }
+
+    @Override
+    public void update(int timeout) {
+        greenState.setTimeout(timeout);
     }
 }

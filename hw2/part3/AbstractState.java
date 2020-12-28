@@ -1,5 +1,6 @@
 public class AbstractState implements State {
     protected TrafficLight trafficLight;
+    private int timeout;
 
     public AbstractState(TrafficLight trafficLight) {
         this.trafficLight = trafficLight;
@@ -34,6 +35,15 @@ public class AbstractState implements State {
     @Override
     public String toString() {
         return this.getClass().getSimpleName();
+    }
+
+    @Override
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public int getTimeout() {
+        return timeout;
     }
 
 }

@@ -1,6 +1,8 @@
 public class Driver {
     public static void main(String[] args) {
-        TrafficLight trafficLight = new TrafficLight();
+        HiTech hiTech = new HiTech();
+
+        TrafficLight trafficLight = new TrafficLight(hiTech);
 
         System.out.println("SUCCESSFULL PATH");
         System.out.println("\n-----\tSTART\t-----\n");
@@ -53,5 +55,25 @@ public class Driver {
         trafficLight.toGreen();
         System.out.println("\n-----\tEND\t-----\n");
 
+
+        hiTech.changeDetected(true);
+        System.out.println("SUCCESSFULL PATH");
+        System.out.println("\n-----\tSTART\t-----\n");
+        System.out.println("\t{\tred->green->yellow->red\t}");
+        trafficLight.reset();
+        trafficLight.toGreen();
+        trafficLight.toYellow();
+        trafficLight.toRed();
+        System.out.println("\n-----\tEND\t-----\n");
+
+        hiTech.changeDetected(false);
+        System.out.println("SUCCESSFULL PATH");
+        System.out.println("\n-----\tSTART\t-----\n");
+        System.out.println("\t{\tred->green->yellow->red\t}");
+        trafficLight.reset();
+        trafficLight.toGreen();
+        trafficLight.toYellow();
+        trafficLight.toRed();
+        System.out.println("\n-----\tEND\t-----\n");
     }
 }
