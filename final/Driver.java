@@ -1,6 +1,8 @@
 class Driver {
     public static void main(String[] args) {
 
-        Society.test();
+        // Thread one = new Thread(new MovingSquares());
+        // one.run();
+        SocietySimulator societySimulator = new SocietySimulator();
     }
 }
