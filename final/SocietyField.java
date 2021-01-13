@@ -15,9 +15,9 @@ public class SocietyField {
             socialObjects[i] = new SocialObject(width, height);
 
         // setting canvas boundaries
-        xlower = objectSize;
+        xlower = 0;
         xupper = width - objectSize;
-        ylower = objectSize;
+        ylower = 0;
         yupper = height - objectSize;
 
         // random infected among the population

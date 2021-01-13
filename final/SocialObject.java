@@ -3,9 +3,10 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
 
-import javax.swing.text.AttributeSet.ColorAttribute;
 
-// TODO. first do the social interaction. collision and then they continue.
+// TODO. die of infected
+// TODO. print info on screen
+// TODO. hospitality
 
 public class SocialObject {
     public enum HealthState {
@@ -24,7 +25,7 @@ public class SocialObject {
     private static final float Z = 0.1F + (new Random().nextFloat() * 0.8F); // disease mortality rate [0.1, 0.9]
 
     private static final int maxS = 5; // [0, 5]
-    private static final int maxM = 1; // [0, 1]
+    // private static final int maxM = 1; // [0, 1]
     private static final int maxD = 9; // [0, 9]
     private static final int maxC = 5; // [0, 5]
 
