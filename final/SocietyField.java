@@ -12,6 +12,11 @@ import javax.swing.JLabel;
 public class SocietyField implements KeyListener {
     private final int objectSize = 5;
     private final int societySize = 30;
+    private final int B = 10; // FIXME. B = P / 100
+    private final float R = 0.5F + (new Random().nextFloat() * 0.5F); // disease spreading factor [0.5, 1.0]
+    private final float Z = 0.1F + (new Random().nextFloat() * 0.8F); // disease mortality rate [0.1, 0.9]
+    private final int hospitalArrival = 25000; // 25 sec.
+    private final int hospitalStaying = 10000; // 10 sec
 
     private SocialObject[] socialObjects = new SocialObject[societySize];
     int xlower, xupper, ylower, yupper;
@@ -24,6 +29,8 @@ public class SocietyField implements KeyListener {
     private Map<String, Integer> values = new HashMap<String, Integer>();
 
     private boolean pause = false;
+    private int inHospital = 0;
+    private float infectedLifetime;
 
     public SocietyField(int width, int height) {
 
@@ -41,6 +48,8 @@ public class SocietyField implements KeyListener {
         ylower = 0;
         yupper = height - objectSize;
 
+        infectedLifetime = (100 * (1 - Z)) * 1000;
+
         // random infected among the population
         socialObjects[random.nextInt(socialObjects.length)].setHealthState(SocialObject.HealthState.INFECTED);
     }
@@ -48,23 +57,55 @@ public class SocietyField implements KeyListener {
     public void update() {
         if (!pause) {
             for (SocialObject socialObject : socialObjects)
-                move(socialObject);
+                if (socialObject.inCanvas())
+                    move(socialObject);
 
-            for (int i = 0; i < socialObjects.length; i++)
-                for (int j = i + 1; j < socialObjects.length; j++)
-                    checkCollision(socialObjects[i], socialObjects[j]);
+            for (int i = 0; i < socialObjects.length; i++) {
+                for (int j = i + 1; j < socialObjects.length; j++) {
+                    if (socialObjects[i].inCanvas() && socialObjects[j].inCanvas())
+                        checkCollision(socialObjects[i], socialObjects[j]);
+                }
+            }
         }
 
     }
 
     public void move(SocialObject a) {
 
+        if (a.isInfected()) {
+
+            a.increaseLifetime(fps);
+            if (a.inHospital() && a.getLifetime() >= hospitalStaying) {
+                a.setHealthState(SocialObject.HealthState.HEALTHY);
+                updateLabel("healthy", 1);
+                updateLabel("hospitalized", -1);
+                inHospital--;
+            }
+
+            if (!a.onStandby()) {
+                if (a.getLifetime() >= hospitalArrival && !hospitalFull()) {
+                    a.setHealthState(SocialObject.HealthState.IN_HOSPITAL);
+                    a.setLifetime(0);
+                    updateLabel("hospitalized", 1);
+                    updateLabel("infected", -1);
+                    inHospital++;
+                }
+
+                else if (a.getLifetime() >= infectedLifetime) {
+                    a.setHealthState(SocialObject.HealthState.DEAD);
+                    updateLabel("dead", 1);
+                    updateLabel("infected", -1);
+                }
+            }
+        }
+
         a.setStandby(a.getStandby() - fps);
         if (!a.onStandby()) {
             if (a.getHealthState() == SocialObject.HealthState.WILL_BE_INFECTED) {
                 a.setHealthState(SocialObject.HealthState.INFECTED);
-                updateLabel("healthy", false);
-                updateLabel("infected", true);
+                a.setLifetime(0);
+                updateLabel("healthy", -1);
+                updateLabel("infected", 1);
             }
 
             int x = a.getX();
@@ -114,13 +155,13 @@ public class SocietyField implements KeyListener {
                 a.setDx(dx == b.getDx() ? -dx : dx);
                 a.setDy(dy == b.getDy() ? -dy : dy);
 
-                if (a.isInfected()) {
+                if (a.isInfected() && !b.isInfected()) {
                     // float P = infectingProb(other);
                     // System.out.println(P);
                     // if (infectingProb(other) > 0.5F)
                     b.setHealthState(SocialObject.HealthState.WILL_BE_INFECTED);
 
-                } else if (b.isInfected()) {
+                } else if (b.isInfected() && !a.isInfected()) {
                     // float P = infectingProb(other);
                     // System.out.println(P);
                     // if (other.infectingProb(this) > 0.5F)
@@ -132,13 +173,15 @@ public class SocietyField implements KeyListener {
     }
 
     public boolean isJustCollided(SocialObject a) {
-        return a.getStandby() >= -3 * fps;
+        return a.getStandby() >= -1000;
     }
 
     public void paintField(Graphics2D g2d) {
         for (SocialObject socialObject : socialObjects) {
-            g2d.setColor(socialObject.getColor());
-            g2d.fillRect(socialObject.getX(), socialObject.getY(), objectSize, objectSize);
+            if (socialObject.inCanvas()) {
+                g2d.setColor(socialObject.getColor());
+                g2d.fillRect(socialObject.getX(), socialObject.getY(), objectSize, objectSize);
+            }
         }
     }
 
@@ -148,8 +191,8 @@ public class SocietyField implements KeyListener {
             labelObservers.get(key).update(values.get(key));
     }
 
-    public void updateLabel(String key, boolean increase) {
-        values.put(key, increase ? values.get(key) + 1 : values.get(key) - 1);
+    public void updateLabel(String key, int x) {
+        values.put(key, values.get(key) + x);
         labelObservers.get(key).update(values.get(key));
     }
 
@@ -195,6 +238,10 @@ public class SocietyField implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent arg0) {
+    }
+
+    public boolean hospitalFull() {
+        return inHospital == B;
     }
 
 }

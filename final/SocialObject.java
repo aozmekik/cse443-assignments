@@ -2,12 +2,11 @@ import java.awt.Color;
 import java.util.Random;
 
 // TODO. die of infected
-// TODO. print info on screen
 // TODO. hospitality
 
 public class SocialObject {
     public enum HealthState {
-        HEALTHY, INFECTED, WILL_BE_INFECTED
+        HEALTHY, INFECTED, WILL_BE_INFECTED, DEAD, IN_HOSPITAL
     }
 
     private HealthState healthState;
@@ -18,14 +17,10 @@ public class SocialObject {
     private int D; // social distance causing social interaction
     private float M;
 
-    private static final float R = 0.5F + (new Random().nextFloat() * 0.5F); // disease spreading factor [0.5, 1.0]
-    private static final float Z = 0.1F + (new Random().nextFloat() * 0.8F); // disease mortality rate [0.1, 0.9]
-
     private static final int maxS = 5; // [0, 5]
     // private static final int maxM = 1; // [0, 1]
     private static final int maxD = 9; // [0, 9]
     private static final int maxC = 5; // [0, 5]
-
 
     private int x;
     private int y;
@@ -36,6 +31,8 @@ public class SocialObject {
 
     private int standby = 0;
     private Random random = new Random();
+
+    private float lifetime = 1;
 
     public SocialObject(int width, int height) {
         healthState = HealthState.HEALTHY;
@@ -79,7 +76,7 @@ public class SocialObject {
         }
     }
 
-    private float infectingProb(SocialObject other) {
+    private float infectingProb(int R, SocialObject other) {
         int dist = Math.min(D, other.D);
         int time = Math.max(C, other.C);
 
@@ -165,6 +162,26 @@ public class SocialObject {
 
     public void setStandby(int standby) {
         this.standby = standby;
+    }
+
+    public float getLifetime() {
+        return this.lifetime;
+    }
+
+    public void setLifetime(float lifetime) {
+        this.lifetime = lifetime;
+    }
+
+    public void increaseLifetime(int x) {
+        this.lifetime += x;
+    }
+
+    public boolean inCanvas() {
+        return healthState != HealthState.DEAD && healthState != HealthState.IN_HOSPITAL;
+    }
+
+    public boolean inHospital() {
+        return healthState == HealthState.IN_HOSPITAL;
     }
 
 }

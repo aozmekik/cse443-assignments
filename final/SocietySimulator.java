@@ -28,7 +28,7 @@ public class SocietySimulator extends JFrame {
         setResizable(false);
 
         SocietyPanel societyPanel = new SocietyPanel(WIDTH, HEIGHT);
-        societyPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+        societyPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
         JPanel leftPanel = new JPanel();
         leftPanel.setBorder(BorderFactory.createEmptyBorder(100, 200, 50, 200));
         leftPanel.setLayout(new GridLayout(1, 1));
@@ -123,8 +123,8 @@ public class SocietySimulator extends JFrame {
             super();
             JLabel labels[] = new JLabel[2];
             JPanel centerPanel = new JPanel(new GridLayout(2, 0));
-            labels[0] = new JLabel("PAUSED");
-            labels[1] = new JLabel("Press P to Continue.");
+            labels[0] = new JLabel("");
+            labels[1] = new JLabel("Press P to Pause.");
             centerPanel.setBackground(Color.BLACK);
 
             Font font = new Font("Verdana", Font.BOLD, 24);
