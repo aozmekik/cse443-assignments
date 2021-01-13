@@ -1,8 +1,6 @@
 import java.awt.Color;
 import java.util.Random;
 
-// TODO. die of infected
-// TODO. hospitality
 
 public class SocialObject {
     public enum HealthState {

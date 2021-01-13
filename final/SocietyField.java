@@ -9,6 +9,9 @@ import java.awt.Rectangle;
 
 import javax.swing.JLabel;
 
+// TODO. start satisfying the goals.
+// TODO. last thing is add gui elements for modify.I
+
 public class SocietyField implements KeyListener {
     private final int objectSize = 5;
     private final int societySize = 30;
@@ -31,6 +34,8 @@ public class SocietyField implements KeyListener {
     private boolean pause = false;
     private int inHospital = 0;
     private float infectedLifetime;
+    // private int logIndex = -1;
+    private String logs[] = new String[5];
 
     public SocietyField(int width, int height) {
 
@@ -41,12 +46,16 @@ public class SocietyField implements KeyListener {
         values.put("healthy", societySize - 1);
         values.put("hospitalized", 0);
         values.put("dead", 0);
+        values.put("time", 0);
 
         // setting canvas boundaries
         xlower = 0;
         xupper = width - objectSize;
         ylower = 0;
         yupper = height - objectSize;
+
+        for (int i = 0; i < logs.length; ++i)
+            logs[i] = " ";
 
         infectedLifetime = (100 * (1 - Z)) * 1000;
 
@@ -56,8 +65,10 @@ public class SocietyField implements KeyListener {
 
     public void update() {
         if (!pause) {
+            updateTime();
+
             for (SocialObject socialObject : socialObjects)
-                if (socialObject.inCanvas())
+                if (socialObject.getHealthState() != SocialObject.HealthState.DEAD)
                     move(socialObject);
 
             for (int i = 0; i < socialObjects.length; i++) {
@@ -72,40 +83,43 @@ public class SocietyField implements KeyListener {
 
     public void move(SocialObject a) {
 
-        if (a.isInfected()) {
+        a.increaseLifetime(fps);
+        if (a.isInfected() || a.inHospital()) {
 
-            a.increaseLifetime(fps);
             if (a.inHospital() && a.getLifetime() >= hospitalStaying) {
                 a.setHealthState(SocialObject.HealthState.HEALTHY);
                 updateLabel("healthy", 1);
                 updateLabel("hospitalized", -1);
                 inHospital--;
+                updateLog("An individual discharged from hospital.");
             }
-
-            if (!a.onStandby()) {
+            else if (!a.onStandby()) {
                 if (a.getLifetime() >= hospitalArrival && !hospitalFull()) {
                     a.setHealthState(SocialObject.HealthState.IN_HOSPITAL);
                     a.setLifetime(0);
                     updateLabel("hospitalized", 1);
                     updateLabel("infected", -1);
                     inHospital++;
+                    updateLog("An individual went to hospital.");
                 }
 
                 else if (a.getLifetime() >= infectedLifetime) {
                     a.setHealthState(SocialObject.HealthState.DEAD);
                     updateLabel("dead", 1);
                     updateLabel("infected", -1);
+                    updateLog("An individual died.");
                 }
             }
         }
 
         a.setStandby(a.getStandby() - fps);
-        if (!a.onStandby()) {
+        if (!a.onStandby() && !a.inHospital()) {
             if (a.getHealthState() == SocialObject.HealthState.WILL_BE_INFECTED) {
                 a.setHealthState(SocialObject.HealthState.INFECTED);
                 a.setLifetime(0);
                 updateLabel("healthy", -1);
                 updateLabel("infected", 1);
+                updateLog("An individual got infected.");
             }
 
             int x = a.getX();
@@ -172,7 +186,32 @@ public class SocietyField implements KeyListener {
 
     }
 
-    public boolean isJustCollided(SocialObject a) {
+    private void updateTime() {
+        values.put("time", values.get("time") + fps);
+        labelObservers.get("time").update("Time: " + time());
+    }
+
+    private void updateLog(String text) {
+        for (int i = 1; i < logs.length; ++i)
+            logs[i - 1] = logs[i];
+        logs[4] = time() + " - " + text;
+        for (int i = 0; i < logs.length - 1; ++i)
+            labelObservers.get(Integer.toString(i)).update(logs[i].length() > 1 ? logs[i]: " ");
+        labelObservers.get("4").update(logs[4]);
+    }
+
+    // private int getLogIndex() {
+    // return (logIndex + 1) / 10;
+    // }
+
+    private String time() {
+        int time = values.get("time");
+        int min = (int) ((float) time / 1000) / 60;
+        int sec = (int) ((float) time / 1000) % 60;
+        return String.format("%02d.%02d", min, sec);
+    }
+
+    private boolean isJustCollided(SocialObject a) {
         return a.getStandby() >= -1000;
     }
 
@@ -191,12 +230,12 @@ public class SocietyField implements KeyListener {
             labelObservers.get(key).update(values.get(key));
     }
 
-    public void updateLabel(String key, int x) {
+    private void updateLabel(String key, int x) {
         values.put(key, values.get(key) + x);
         labelObservers.get(key).update(values.get(key));
     }
 
-    public class LabelObserver {
+    private class LabelObserver {
         private JLabel label;
 
         public LabelObserver(JLabel label) {
@@ -212,7 +251,7 @@ public class SocietyField implements KeyListener {
         }
     }
 
-    public void changeState() {
+    private void changeState() {
         pause = !pause;
     }
 

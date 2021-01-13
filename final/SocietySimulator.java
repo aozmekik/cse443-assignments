@@ -37,6 +37,7 @@ public class SocietySimulator extends JFrame {
         add(leftPanel, BorderLayout.CENTER);
         getContentPane().add(new TextPanel(), BorderLayout.NORTH);
         getContentPane().add(new PausePanel(), BorderLayout.SOUTH);
+        // getContentPane().add(new LogPanel(), BorderLayout.WEST);
         addKeyListener((KeyListener) societyField);
         setVisible(true);
     }
@@ -121,13 +122,14 @@ public class SocietySimulator extends JFrame {
 
         public PausePanel() {
             super();
-            JLabel labels[] = new JLabel[2];
-            JPanel centerPanel = new JPanel(new GridLayout(2, 0));
+            JLabel labels[] = new JLabel[3];
+            JPanel centerPanel = new JPanel(new GridLayout(3, 0));
             labels[0] = new JLabel("");
-            labels[1] = new JLabel("Press P to Pause.");
+            labels[1] = new JLabel("Time: ");
+            labels[2] = new JLabel("Press P to Pause.");
             centerPanel.setBackground(Color.BLACK);
 
-            Font font = new Font("Verdana", Font.BOLD, 24);
+            Font font = new Font("Verdana", Font.BOLD, 16);
 
             for (JLabel label : labels) {
                 centerPanel.add(label);
@@ -137,9 +139,46 @@ public class SocietySimulator extends JFrame {
             }
 
             societyField.addObserver("state", labels[0]);
-            societyField.addObserver("info", labels[1]);
+            societyField.addObserver("info", labels[2]);
+            societyField.addObserver("time", labels[1]);
 
-            int gap = 5;
+            int gap = 1;
+            setLayout(new BorderLayout(gap, gap));
+            setBorder(BorderFactory.createEmptyBorder(gap, gap, gap, gap));
+            add(centerPanel, BorderLayout.EAST);
+            add(new LogPanel(), BorderLayout.WEST);
+            setBackground(Color.BLACK);
+        }
+
+    }
+
+    class LogPanel extends JPanel {
+
+        private static final long serialVersionUID = 1L;
+
+        public LogPanel() {
+            super();
+            JLabel labels[] = new JLabel[5];
+            JPanel centerPanel = new JPanel(new GridLayout(5, 0));
+            labels[0] = new JLabel("");
+            labels[1] = new JLabel("Time: ");
+            labels[2] = new JLabel("Press P to Pause.");
+            centerPanel.setBackground(Color.BLACK);
+
+            Font font = new Font("Verdana", Font.BOLD, 16);
+
+            for (int i = 0; i < labels.length; ++i) {
+                labels[i] = new JLabel(" ");
+                centerPanel.add(labels[i]);
+                // labels[i].setHorizontalAlignment(JLabel.CENTER);
+                labels[i].setFont(font);
+                labels[i].setForeground(Color.WHITE);
+                societyField.addObserver(String.format("%d", i), labels[i]);
+            }
+
+            labels[4].setForeground(Color.RED);
+
+            int gap = 1;
             setLayout(new BorderLayout(gap, gap));
             setBorder(BorderFactory.createEmptyBorder(gap, gap, gap, gap));
             add(centerPanel, BorderLayout.CENTER);
