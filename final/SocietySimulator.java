@@ -3,8 +3,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,34 +14,31 @@ import javax.swing.JLabel;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 
-public class SocietySimulator {
+public class SocietySimulator extends JFrame {
+    private static final long serialVersionUID = 1L;
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
     private SocietyField societyField = new SocietyField(WIDTH, HEIGHT);
 
     public SocietySimulator() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+        super("Epidemic Simulation");
+        setSize(WIDTH + 400, HEIGHT + 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
 
-                JFrame frame = new JFrame("Epidemic Simulation");
-                frame.setSize(WIDTH + 400, HEIGHT + 200);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setLocationRelativeTo(null);
-                frame.setResizable(false);
-
-                SocietyPanel societyPanel = new SocietyPanel(WIDTH, HEIGHT);
-                societyPanel.setBorder(BorderFactory.createLineBorder(Color.red));
-                JPanel leftPanel = new JPanel();
-                leftPanel.setBorder(BorderFactory.createEmptyBorder(100, 200, 50, 200));
-                leftPanel.setLayout(new GridLayout(1, 1));
-                leftPanel.add(societyPanel);
-                leftPanel.setBackground(Color.BLACK);
-                frame.add(leftPanel, BorderLayout.CENTER);
-                frame.getContentPane().add(new TextPanel(), BorderLayout.NORTH);
-                frame.setVisible(true);
-            }
-        });
+        SocietyPanel societyPanel = new SocietyPanel(WIDTH, HEIGHT);
+        societyPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+        JPanel leftPanel = new JPanel();
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(100, 200, 50, 200));
+        leftPanel.setLayout(new GridLayout(1, 1));
+        leftPanel.add(societyPanel);
+        leftPanel.setBackground(Color.BLACK);
+        add(leftPanel, BorderLayout.CENTER);
+        getContentPane().add(new TextPanel(), BorderLayout.NORTH);
+        getContentPane().add(new PausePanel(), BorderLayout.SOUTH);
+        addKeyListener((KeyListener) societyField);
+        setVisible(true);
     }
 
     class SocietyPanel extends JPanel {
@@ -86,16 +83,10 @@ public class SocietySimulator {
 
     }
 
-    // FIXME. maybe observer design pattern here.
-
     class TextPanel extends JPanel {
 
-        /**
-         *
-         */
         private static final long serialVersionUID = 1L;
         private Map<String, JLabel> labels = new HashMap<String, JLabel>();
-        
 
         public TextPanel() {
             super();
@@ -123,4 +114,38 @@ public class SocietySimulator {
             setBackground(Color.BLACK);
         }
     }
+
+    class PausePanel extends JPanel {
+
+        private static final long serialVersionUID = 1L;
+
+        public PausePanel() {
+            super();
+            JLabel labels[] = new JLabel[2];
+            JPanel centerPanel = new JPanel(new GridLayout(2, 0));
+            labels[0] = new JLabel("PAUSED");
+            labels[1] = new JLabel("Press P to Continue.");
+            centerPanel.setBackground(Color.BLACK);
+
+            Font font = new Font("Verdana", Font.BOLD, 24);
+
+            for (JLabel label : labels) {
+                centerPanel.add(label);
+                label.setHorizontalAlignment(JLabel.CENTER);
+                label.setFont(font);
+                label.setForeground(Color.WHITE);
+            }
+
+            societyField.addObserver("state", labels[0]);
+            societyField.addObserver("info", labels[1]);
+
+            int gap = 5;
+            setLayout(new BorderLayout(gap, gap));
+            setBorder(BorderFactory.createEmptyBorder(gap, gap, gap, gap));
+            add(centerPanel, BorderLayout.CENTER);
+            setBackground(Color.BLACK);
+        }
+
+    }
+
 }

@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class SocialObject {
     public enum HealthState {
-        HEALTHY, SICK, WILL_BE_SICK
+        HEALTHY, INFECTED, WILL_BE_INFECTED
     }
 
     private HealthState healthState;
@@ -60,7 +60,7 @@ public class SocialObject {
     }
 
     public boolean isInfected() {
-        return healthState == HealthState.SICK;
+        return healthState == HealthState.INFECTED;
     }
 
     public void setColor() {
@@ -68,10 +68,10 @@ public class SocialObject {
             case HEALTHY:
                 color = Color.WHITE;
                 break;
-            case SICK:
+            case INFECTED:
                 color = Color.RED;
                 break;
-            case WILL_BE_SICK:
+            case WILL_BE_INFECTED:
                 color = Color.YELLOW;
                 break;
             default:
@@ -92,6 +92,7 @@ public class SocialObject {
 
     public void setHealthState(HealthState healthState) {
         this.healthState = healthState;
+        setColor();
     }
 
     public Color getColor() {
@@ -159,7 +160,7 @@ public class SocialObject {
     }
 
     public boolean onStandby() {
-        return this.standby >= 0;
+        return this.standby > 0;
     }
 
     public void setStandby(int standby) {
