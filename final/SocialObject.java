@@ -1,8 +1,5 @@
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.Random;
-
 
 // TODO. die of infected
 // TODO. print info on screen
@@ -29,8 +26,6 @@ public class SocialObject {
     private static final int maxD = 9; // [0, 9]
     private static final int maxC = 5; // [0, 5]
 
-    private static final int size = 5;
-    private static final int fps = 30;
 
     private int x;
     private int y;
@@ -60,83 +55,15 @@ public class SocialObject {
 
     }
 
-    public void update(int xlower, int xupper, int ylower, int yupper) {
-
-        standby -= fps;
-        if (!onStandby()) { // there is no time debt to pay with waiting
-            if (healthState == HealthState.WILL_BE_SICK)
-                healthState = HealthState.SICK;
-
-            x += dx * S;
-            if (x < xlower || x > xupper) {
-                x -= dx * S;
-                dx = -dx;
-                x += dx * S;
-            }
-
-            y += dy * S;
-            if (y < ylower || y > yupper) {
-                y -= dy * S;
-                dy = -dy;
-                y += dy * S;
-            }
-        }
-
-        setColor();
-    }
-
-    public void paint(Graphics g) {
-        g.setColor(getColor());
-        g.fillRect(x, y, size, size);
-    }
-
     private int delta() {
         return Math.random() > 0.5 ? 1 : -1;
     }
 
-    public void checkCollision(SocialObject other) {
-        if (!onStandby() && !other.onStandby()) {
-
-            // if (isInfected())
-            // System.out.println("Infected");
-
-            // FIXME. I added size here
-            int dist = Math.min(getD(), other.getD()) + size;
-            Rectangle r1 = new Rectangle(getX(), getY(), dist, dist);
-            Rectangle r2 = new Rectangle(other.getX(), other.getY(), dist, dist);
-
-            if (r1.intersects(r2)) {
-                // in miliseconds.
-                int time = (Math.max(getC(), other.getC())) * 1000;
-
-                setStandby(time);
-                other.setStandby(time);
-                dx = dx == other.dx ? -dx: dx;
-                dy = dy == other.dy ? -dy: dy;
-
-
-                if (isInfected()) {
-                    // float P = infectingProb(other);
-                    // System.out.println(P);
-                    // if (infectingProb(other) > 0.5F)
-                        other.setHealthState(HealthState.WILL_BE_SICK);
-
-                } else if (other.isInfected()) {
-                    // float P = infectingProb(other);
-                    // System.out.println(P);
-                    // if (other.infectingProb(this) > 0.5F)
-                    setHealthState(HealthState.WILL_BE_SICK);
-                }
-            }
-        }
-
-    }
-
-    private boolean isInfected() {
+    public boolean isInfected() {
         return healthState == HealthState.SICK;
     }
 
-    private void setColor() {
+    public void setColor() {
         switch (healthState) {
             case HEALTHY:
                 color = Color.WHITE;
