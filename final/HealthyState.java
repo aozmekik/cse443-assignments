@@ -49,33 +49,27 @@ public class HealthyState implements SocialState {
 
     @Override
     public void checkCollision(SocialObject other) {
-        if (!so.isJustCollided() && !other.isJustCollided()) {
-            int dist = Math.min(so.getD(), other.getD()) + objectSize;
-            Rectangle r1 = new Rectangle(so.getX(), so.getY(), dist, dist);
-            Rectangle r2 = new Rectangle(other.getX(), other.getY(), dist, dist);
+        if (collides(other)) {
+            int time = (Math.max(so.getC(), other.getC())) * 1000; // in miliseconds.
 
-            if (r1.intersects(r2)) {
-                int time = (Math.max(so.getC(), other.getC())) * 1000; // in miliseconds.
+            if (other.isInfected()) {
+                StandbyState standbyState;
+                standbyState = (StandbyState) other.getStandbyState();
+                standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
 
-                if (other.isInfected()) {
-                    StandbyState standbyState;
-                    standbyState = (StandbyState) so.getStandbyState();
-                    standbyState.setState(standbyState.getInfectedState());
-
-                    standbyState = (StandbyState) other.getStandbyState();
-                    standbyState.setState(standbyState.getWillbeInfectedState());
-                }
-
-                so.setStandby(time);
-                other.setStandby(time);
-                so.setState(so.getStandbyState());
-                other.setState(other.getStandbyState());
-
-                int dx = so.getDx();
-                int dy = so.getDy();
-                so.setDx(dx == other.getDx() ? -dx : dx);
-                so.setDy(dy == other.getDy() ? -dy : dy);
+                standbyState = (StandbyState) so.getStandbyState();
+                standbyState.setMoveOnState(standbyState.getWillbeInfectedMoveOnState());
             }
+
+            so.setStandby(time);
+            other.setStandby(time);
+            so.setState(so.getStandbyState());
+            other.setState(other.getStandbyState());
+
+            int dx = so.getDx();
+            int dy = so.getDy();
+            so.setDx(dx == other.getDx() ? -dx : dx);
+            so.setDy(dy == other.getDy() ? -dy : dy);
         }
     }
 
@@ -98,5 +92,17 @@ public class HealthyState implements SocialState {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public boolean collides(SocialObject other) {
+        boolean collision = false;
+        if (so.inCanvas() && other.inCanvas() && !so.isJustCollided() && !other.isJustCollided()) {
+            int dist = Math.min(so.getD(), other.getD()) + objectSize;
+            Rectangle r1 = new Rectangle(so.getX(), so.getY(), dist, dist);
+            Rectangle r2 = new Rectangle(other.getX(), other.getY(), dist, dist);
+
+            collision = r1.intersects(r2);
+        }
+        return collision;
     }
 }

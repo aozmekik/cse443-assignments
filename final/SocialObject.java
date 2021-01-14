@@ -185,6 +185,11 @@ public class SocialObject {
         return getState() instanceof InfectedState;
     }
 
+    public boolean inCanvas()
+    {
+        return !(getState() instanceof DeadState || getState() instanceof InHospitalState);
+    }
+
     public boolean isJustCollided() {
         return getStandby() >= -500;
     }

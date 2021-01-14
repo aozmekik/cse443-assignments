@@ -16,6 +16,8 @@ public class InHospitalState extends HealthyState {
             sc.updateLabel("hospitalized", -1);
             sc.updateLog("An individual discharged from hospital.");
             setColor(Color.WHITE);
+            StandbyState standbyState = ((StandbyState) so.getStandbyState());
+            standbyState.setMoveOnState(standbyState.getHealthyMoveOnState());
         }
     }
 

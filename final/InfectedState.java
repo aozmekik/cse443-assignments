@@ -29,34 +29,28 @@ public class InfectedState extends HealthyState {
 
     @Override
     public void checkCollision(SocialObject other) {
-        if (!so.isJustCollided() && !other.isJustCollided()) {
-            int dist = Math.min(so.getD(), other.getD()) + objectSize;
-            Rectangle r1 = new Rectangle(so.getX(), so.getY(), dist, dist);
-            Rectangle r2 = new Rectangle(other.getX(), other.getY(), dist, dist);
+        if (collides(other)) {
+            int time = (Math.max(so.getC(), other.getC())) * 1000; // in miliseconds.
 
-            if (r1.intersects(r2)) {
-                int time = (Math.max(so.getC(), other.getC())) * 1000; // in miliseconds.
+            StandbyState standbyState;
+            standbyState = (StandbyState) so.getStandbyState();
+            standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
 
-                StandbyState standbyState;
-                standbyState = (StandbyState) so.getStandbyState();
-                standbyState.setState(standbyState.getInfectedState());
+            standbyState = (StandbyState) other.getStandbyState();
+            if (other.isInfected())
+                standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
+            else
+                standbyState.setMoveOnState(standbyState.getWillbeInfectedMoveOnState());
 
-                standbyState = (StandbyState) other.getStandbyState();
-                if (other.isInfected())
-                    standbyState.setState(standbyState.getInfectedState());
-                else
-                    standbyState.setState(standbyState.getWillbeInfectedState());
+            so.setStandby(time);
+            other.setStandby(time);
+            so.setState(so.getStandbyState());
+            other.setState(other.getStandbyState());
 
-                so.setStandby(time);
-                other.setStandby(time);
-                so.setState(so.getStandbyState());
-                other.setState(other.getStandbyState());
-
-                int dx = so.getDx();
-                int dy = so.getDy();
-                so.setDx(dx == other.getDx() ? -dx : dx);
-                so.setDy(dy == other.getDy() ? -dy : dy);
-            }
+            int dx = so.getDx();
+            int dy = so.getDy();
+            so.setDx(dx == other.getDx() ? -dx : dx);
+            so.setDy(dy == other.getDy() ? -dy : dy);
         }
 
         // SocialState state = other.getState();

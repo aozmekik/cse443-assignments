@@ -54,6 +54,8 @@ public class SocietyController implements KeyListener {
 
         infectedLifetime = (100 * (1 - Z)) * 1000;
 
+        // for (int i = 0; i < socialObjects.length; i++)
+        //     socialObjects[i].setState(socialObjects[i].getInfectedState());
 
         // random infected among the population
         SocialObject so = socialObjects[random.nextInt(socialObjects.length)];

@@ -2,14 +2,14 @@ import java.awt.Color;
 
 
 public class StandbyState extends HealthyState {
-    private MoveOnState healthyState = new HealthyState(this);
-    private MoveOnState wilBeInfectedState = new WillBeInfectedState(this);
-    private MoveOnState infectedState = new InfectedState(this);
-    private MoveOnState state;
+    private MoveOnState healthyMoveOn = new HealthyMoveOnState(this);
+    private MoveOnState willBeInfectedMoveOnState = new WillBeInfectedMoveOnState(this);
+    private MoveOnState infectedMoveOnState = new InfectedMoveOnState(this);
+    private MoveOnState moveOnState;
 
     public StandbyState(SocialObject socialObject) {
         super(socialObject);
-        state = healthyState;
+        moveOnState = healthyMoveOn;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class StandbyState extends HealthyState {
         so.setStandby(so.getStandby() - delta);
         // satisfied the waiting period
         if (so.getStandby() <= 0)
-            state.moveOn();
+            moveOnState.moveOn();
     }
 
     @Override
@@ -26,41 +26,41 @@ public class StandbyState extends HealthyState {
         // intentionally left blank.
     }
 
-    public void setState(MoveOnState handler) {
-        this.state = handler;
+    public void setMoveOnState(MoveOnState handler) {
+        this.moveOnState = handler;
         color = handler.getColor();
     }
 
-    public MoveOnState getHealthyState() {
-        return this.healthyState;
+    public MoveOnState getHealthyMoveOnState() {
+        return this.healthyMoveOn;
     }
 
-    public MoveOnState getWillbeInfectedState() {
-        return this.wilBeInfectedState;
+    public MoveOnState getWillbeInfectedMoveOnState() {
+        return this.willBeInfectedMoveOnState;
     }
 
-    public MoveOnState getInfectedState() {
-        return this.infectedState;
+    public MoveOnState getInfectedMoveOnState() {
+        return this.infectedMoveOnState;
     }
 
-    public MoveOnState getState() {
-        return this.state;
+    public MoveOnState getMoveOnState() {
+        return this.moveOnState;
     }
 
     public abstract class MoveOnState {
-        protected StandbyState state;
+        protected StandbyState standByState;
 
         public MoveOnState(StandbyState state)
         {
-            this.state = state;
+            this.standByState = state;
         }
 
         public abstract void moveOn();
         public abstract Color getColor();
     }
 
-    public class HealthyState extends MoveOnState {
-        public HealthyState(StandbyState state) {
+    public class HealthyMoveOnState extends MoveOnState {
+        public HealthyMoveOnState(StandbyState state) {
             super(state);
         }
 
@@ -75,9 +75,9 @@ public class StandbyState extends HealthyState {
         }
     }
 
-    public class WillBeInfectedState extends MoveOnState {
+    public class WillBeInfectedMoveOnState extends MoveOnState {
 
-        public WillBeInfectedState(StandbyState state) {
+        public WillBeInfectedMoveOnState(StandbyState state) {
             super(state);
         }
 
@@ -88,7 +88,7 @@ public class StandbyState extends HealthyState {
             sc.updateLabel("healthy", -1);
             sc.updateLabel("infected", 1);
             sc.updateLog("An individual got infected.");
-            state.setState(state.getInfectedState());
+            standByState.setMoveOnState(standByState.getInfectedMoveOnState());
         }
 
         @Override
@@ -98,9 +98,9 @@ public class StandbyState extends HealthyState {
 
     }
 
-    public class InfectedState extends MoveOnState {
+    public class InfectedMoveOnState extends MoveOnState {
 
-        public InfectedState(StandbyState state) {
+        public InfectedMoveOnState(StandbyState state) {
             super(state);
         }
 
