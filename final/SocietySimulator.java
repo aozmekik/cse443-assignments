@@ -18,7 +18,7 @@ public class SocietySimulator extends JFrame {
     private static final long serialVersionUID = 1L;
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 600;
-    private SocietyField societyField = new SocietyField(WIDTH, HEIGHT);
+    private SocietyController sc = new SocietyController(WIDTH, HEIGHT);
 
     public SocietySimulator() {
         super("Epidemic Simulation");
@@ -38,7 +38,7 @@ public class SocietySimulator extends JFrame {
         getContentPane().add(new TextPanel(), BorderLayout.NORTH);
         getContentPane().add(new PausePanel(), BorderLayout.SOUTH);
         // getContentPane().add(new LogPanel(), BorderLayout.WEST);
-        addKeyListener((KeyListener) societyField);
+        addKeyListener((KeyListener) sc);
         setVisible(true);
     }
 
@@ -76,8 +76,8 @@ public class SocietySimulator extends JFrame {
             g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
             g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-            societyField.update();
-            societyField.paintField(g2d);
+            sc.update();
+            sc.paintField(g2d);
 
             g2d.dispose();
         }
@@ -105,7 +105,7 @@ public class SocietySimulator extends JFrame {
                 label.setHorizontalAlignment(JLabel.CENTER);
                 label.setFont(font);
                 label.setForeground(Color.WHITE);
-                societyField.addObserver(key, label);
+                sc.addObserver(key, label);
             }
 
             int gap = 5;
@@ -138,9 +138,9 @@ public class SocietySimulator extends JFrame {
                 label.setForeground(Color.WHITE);
             }
 
-            societyField.addObserver("state", labels[0]);
-            societyField.addObserver("info", labels[2]);
-            societyField.addObserver("time", labels[1]);
+            sc.addObserver("state", labels[0]);
+            sc.addObserver("info", labels[2]);
+            sc.addObserver("time", labels[1]);
 
             int gap = 1;
             setLayout(new BorderLayout(gap, gap));
@@ -173,7 +173,7 @@ public class SocietySimulator extends JFrame {
                 // labels[i].setHorizontalAlignment(JLabel.CENTER);
                 labels[i].setFont(font);
                 labels[i].setForeground(Color.WHITE);
-                societyField.addObserver(String.format("%d", i), labels[i]);
+                sc.addObserver(String.format("%d", i), labels[i]);
             }
 
             labels[4].setForeground(Color.RED);

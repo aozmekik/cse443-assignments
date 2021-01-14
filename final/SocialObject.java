@@ -1,14 +1,13 @@
-import java.awt.Color;
 import java.util.Random;
-
+import java.awt.Graphics2D;
 
 public class SocialObject {
-    public enum HealthState {
-        HEALTHY, INFECTED, WILL_BE_INFECTED, DEAD, IN_HOSPITAL
-    }
-
-    private HealthState healthState;
-    private Color color;
+    private SocialState healthyState;
+    private SocialState standbyState; // on collision
+    private SocialState infectedState;
+    private SocialState deadState;
+    private SocialState inHospitalState;
+    private SocialState state;
 
     private int S; // constant speed of S pixels/second.
     private int C; // social interaction time with another individual
@@ -27,14 +26,18 @@ public class SocialObject {
     private int dx;
     private int dy;
 
-    private int standby = 0;
+    private int standby = -501;
     private Random random = new Random();
 
-    private float lifetime = 1;
+    private float lifetime = 0;
 
     public SocialObject(int width, int height) {
-        healthState = HealthState.HEALTHY;
-        setColor();
+        healthyState = new HealthyState(this);
+        standbyState = new StandbyState(this);
+        infectedState = new InfectedState(this);
+        inHospitalState = new InHospitalState(this);
+        deadState = new DeadState(this);
+        state = healthyState;
 
         S = random.nextInt(maxS) + 1;
         M = random.nextFloat();
@@ -54,24 +57,24 @@ public class SocialObject {
         return Math.random() > 0.5 ? 1 : -1;
     }
 
-    public boolean isInfected() {
-        return healthState == HealthState.INFECTED;
+    public void update(int delta) {
+        state.update(delta);
     }
 
-    public void setColor() {
-        switch (healthState) {
-            case HEALTHY:
-                color = Color.WHITE;
-                break;
-            case INFECTED:
-                color = Color.RED;
-                break;
-            case WILL_BE_INFECTED:
-                color = Color.YELLOW;
-                break;
-            default:
-                color = Color.WHITE;
-        }
+    public void checkCollision(SocialObject other) {
+        state.checkCollision(other);
+    }
+
+    public void paint(Graphics2D g2d) {
+        state.paint(g2d);
+    }
+
+    public void setState(SocialState state) {
+        this.state = state;
+    }
+
+    public SocialState getState() {
+        return this.state;
     }
 
     private float infectingProb(int R, SocialObject other) {
@@ -81,17 +84,24 @@ public class SocialObject {
         return R * (1 + (float) (time) / 10F) * M * other.M * (1 - (float) (dist) / 10F);
     }
 
-    public HealthState getHealthState() {
-        return this.healthState;
+    public SocialState getHealthyState() {
+        return this.healthyState;
     }
 
-    public void setHealthState(HealthState healthState) {
-        this.healthState = healthState;
-        setColor();
+    public SocialState getInfectedState() {
+        return this.infectedState;
     }
 
-    public Color getColor() {
-        return this.color;
+    public SocialState getStandbyState() {
+        return this.standbyState;
+    }
+
+    public SocialState getDeadState() {
+        return this.deadState;
+    }
+
+    public SocialState getInHospitalState() {
+        return this.inHospitalState;
     }
 
     public int getS() {
@@ -154,10 +164,6 @@ public class SocialObject {
         return this.standby;
     }
 
-    public boolean onStandby() {
-        return this.standby > 0;
-    }
-
     public void setStandby(int standby) {
         this.standby = standby;
     }
@@ -174,12 +180,13 @@ public class SocialObject {
         this.lifetime += x;
     }
 
-    public boolean inCanvas() {
-        return healthState != HealthState.DEAD && healthState != HealthState.IN_HOSPITAL;
+    public boolean isInfected()
+    {
+        return getState() instanceof InfectedState;
     }
 
-    public boolean inHospital() {
-        return healthState == HealthState.IN_HOSPITAL;
+    public boolean isJustCollided() {
+        return getStandby() >= -500;
     }
 
 }
