@@ -5,7 +5,6 @@ public class SocialObject {
     private SocialState healthyState;
     private SocialState standbyState; // on collision
     private SocialState infectedState;
-    private SocialState deadState;
     private SocialState inHospitalState;
     private SocialState state;
 
@@ -37,7 +36,6 @@ public class SocialObject {
         standbyState = new StandbyState(this);
         infectedState = new InfectedState(this);
         inHospitalState = new InHospitalState(this);
-        deadState = new DeadState(this);
         state = healthyState;
 
         S = random.nextInt(maxS) + 1;
@@ -99,9 +97,6 @@ public class SocialObject {
         return this.standbyState;
     }
 
-    public SocialState getDeadState() {
-        return this.deadState;
-    }
 
     public SocialState getInHospitalState() {
         return this.inHospitalState;
@@ -188,7 +183,7 @@ public class SocialObject {
     }
 
     public boolean inCanvas() {
-        return !(getState() instanceof DeadState || getState() instanceof InHospitalState);
+        return !(getState() instanceof InHospitalState);
     }
 
     public boolean isJustCollided() {
