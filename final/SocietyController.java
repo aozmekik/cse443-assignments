@@ -4,16 +4,18 @@ import java.util.Map;
 import java.util.Random;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.lang.Thread.State;
 
 import javax.swing.JLabel;
 
 // TODO. start satisfying the goals.
 // TODO. last thing is add gui elements for modify.I
 
-// TODO. design pattern for individuals.
-// TODO. state design pattern.
+// TODO. Mediator
+// TODO. Producer/Consumer?
+// TODO. flexible gui adding them one by one & bulk.
 
-public class SocietyController implements KeyListener {
+public class SocietyController implements KeyListener, Mediator {
     private final int objectSize = 5;
     private final int P = 100;
     private final int B = P / 100; // FIXME. B = P / 100
@@ -33,13 +35,12 @@ public class SocietyController implements KeyListener {
 
     private boolean pause = false;
     private float infectedLifetime;
-    // private int logIndex = -1;
     private String logs[] = new String[5];
 
     public SocietyController(int width, int height) {
 
         for (int i = 0; i < socialObjects.length; i++)
-            socialObjects[i] = new SocialObject(width, height);
+            socialObjects[i] = new SocialObject(this, width, height);
 
         values.put("infected", 1);
         values.put("healthy", P - 1);
@@ -54,9 +55,6 @@ public class SocietyController implements KeyListener {
 
         infectedLifetime = (100 * (1 - Z)) * 1000;
 
-        // for (int i = 0; i < socialObjects.length; i++)
-        //     socialObjects[i].setState(socialObjects[i].getInfectedState());
-
         // random infected among the population
         SocialObject so = socialObjects[random.nextInt(socialObjects.length)];
         so.setState(so.getInfectedState());
@@ -65,134 +63,16 @@ public class SocietyController implements KeyListener {
     public void update() {
         if (!pause) {
             updateTime();
-            // for (SocialObject socialObject : socialObjects)
-            // socialObject.update(delta);
-            for (int i = 0; i < socialObjects.length; i++) {
-                socialObjects[i].update(delta);
-                // if (socialObjects[i].getState() instanceof InfectedState)
-                //     System.out.printf("[%d]: %f\n",i,  socialObjects[i].getLifetime());
-            }
 
-            // if (socialObject.getHealthState() != SocialObject.HealthState.DEAD)
-            // move(socialObject);
+            for (SocialObject socialObject : socialObjects)
+                socialObject.update(delta);
 
-            for (int i = 0; i < socialObjects.length; i++) {
+            for (int i = 0; i < socialObjects.length; i++)
                 for (int j = i + 1; j < socialObjects.length; j++)
                     socialObjects[i].checkCollision(socialObjects[j]);
-            }
-
-            // for (int i = 0; i < socialObjects.length; i++) {
-            // for (int j = i + 1; j < socialObjects.length; j++) {
-            // if (socialObjects[i].inCanvas() && socialObjects[j].inCanvas())
-            // checkCollision(socialObjects[i], socialObjects[j]);
-            // }
-            // }
         }
 
     }
-
-    // public void move(SocialObject a) {
-
-    // a.increaseLifetime(delta);
-    // if (a.isInfected() || a.inHospital()) {
-
-    // if (a.inHospital() && a.getLifetime() >= hospitalStaying) {
-    // a.setHealthState(SocialObject.HealthState.HEALTHY);
-    // updateLabel("healthy", 1);
-    // updateLabel("hospitalized", -1, String.format("/%d", B));
-    // inHospital--;
-    // updateLog("An individual discharged from hospital.");
-    // } else if (!a.onStandby()) {
-    // if (a.getLifetime() >= hospitalArrival && !hospitalFull()) {
-    // a.setHealthState(SocialObject.HealthState.IN_HOSPITAL);
-    // a.setLifetime(0);
-    // updateLabel("hospitalized", 1, String.format("/%d", B));
-    // updateLabel("infected", -1);
-    // inHospital++;
-    // updateLog("An individual went to hospital.");
-    // }
-
-    // else if (a.getLifetime() >= infectedLifetime) {
-    // a.setHealthState(SocialObject.HealthState.DEAD);
-    // updateLabel("dead", 1);
-    // updateLabel("infected", -1);
-    // updateLog("An individual died.");
-    // }
-    // }
-    // }
-
-    // a.setStandby(a.getStandby() - delta);
-    // if (!a.onStandby() && !a.inHospital()) {
-    // if (a.getHealthState() == SocialObject.HealthState.WILL_BE_INFECTED) {
-    // a.setHealthState(SocialObject.HealthState.INFECTED);
-    // a.setLifetime(0);
-    // updateLabel("healthy", -1);
-    // updateLabel("infected", 1);
-    // updateLog("An individual got infected.");
-    // }
-
-    // int x = a.getX();
-    // int y = a.getY();
-    // int dx = a.getDx();
-    // int dy = a.getDy();
-    // int S = a.getS();
-
-    // x += dx * S;
-    // if (x < xlower || x > xupper) {
-    // x -= dx * S;
-    // dx = -dx;
-    // x += dx * S;
-    // }
-
-    // y += dy * S;
-    // if (y < ylower || y > yupper) {
-    // y -= dy * S;
-    // dy = -dy;
-    // y += dy * S;
-    // }
-
-    // a.setX(x);
-    // a.setY(y);
-    // a.setDx(dx);
-    // a.setDy(dy);
-    // }
-
-    // }
-
-    // public void checkCollision(SocialObject a, SocialObject b) {
-    // if (!isJustCollided(a) && !isJustCollided(b)) {
-
-    // int dist = Math.min(a.getD(), b.getD()) + objectSize;
-    // Rectangle r1 = new Rectangle(a.getX(), a.getY(), dist, dist);
-    // Rectangle r2 = new Rectangle(b.getX(), b.getY(), dist, dist);
-
-    // if (r1.intersects(r2)) {
-    // // in miliseconds.
-    // int time = (Math.max(a.getC(), b.getC())) * 1000;
-
-    // a.setStandby(time);
-    // b.setStandby(time);
-
-    // int dx = a.getDx();
-    // int dy = a.getDy();
-    // a.setDx(dx == b.getDx() ? -dx : dx);
-    // a.setDy(dy == b.getDy() ? -dy : dy);
-
-    // if (a.isInfected() && !b.isInfected()) {
-    // // float P = infectingProb(other);
-    // // System.out.println(P);
-    // // if (infectingProb(other) > 0.5F)
-    // b.setHealthState(SocialObject.HealthState.WILL_BE_INFECTED);
-
-    // } else if (b.isInfected() && !a.isInfected()) {
-    // // float P = infectingProb(other);
-    // // System.out.println(P);
-    // // if (other.infectingProb(this) > 0.5F)
-    // a.setHealthState(SocialObject.HealthState.WILL_BE_INFECTED);
-    // }
-    // }
-    // }
-    // }
 
     private void updateTime() {
         values.put("time", values.get("time") + delta);
@@ -215,19 +95,9 @@ public class SocietyController implements KeyListener {
         return String.format("%02d.%02d", min, sec);
     }
 
-    private boolean isJustCollided(SocialObject a) {
-        return a.getStandby() >= -1000;
-    }
-
-    public void paintField(Graphics2D g2d) {
-        for (SocialObject socialObject : socialObjects) {
+    public void paint(Graphics2D g2d) {
+        for (SocialObject socialObject : socialObjects)
             socialObject.paint(g2d);
-            // if (socialObject.inCanvas()) {
-            // g2d.setColor(socialObject.getColor());
-            // g2d.fillRect(socialObject.getX(), socialObject.getY(), objectSize,
-            // objectSize);
-            // }
-        }
     }
 
     public void addObserver(String key, JLabel label) {
@@ -238,13 +108,11 @@ public class SocietyController implements KeyListener {
 
     public void updateLabel(String key, int x) {
         values.put(key, values.get(key) + x);
-        // labelObservers.get(key).update(values.get(key));
         labelObservers.get(key).update(key.toUpperCase() + ": " + Integer.toString(values.get(key)));
     }
 
     public void updateLabel(String key, int x, String text) {
         values.put(key, values.get(key) + x);
-        // labelObservers.get(key).update(values.get(key));
         labelObservers.get(key).update(key.toUpperCase() + ": " + Integer.toString(values.get(key)) + text);
     }
 
@@ -314,6 +182,46 @@ public class SocietyController implements KeyListener {
 
     public float getInfectedLifetime() {
         return this.infectedLifetime;
+    }
+
+    @Override
+    public void notify(SocialObject so, SocialObject other, String event) {
+        if (event == "collision") {
+            int time = (Math.max(so.getC(), other.getC())) * 1000; // in miliseconds.
+
+            StandbyState standbyState;
+            // so is healthy and other is infected. so gets infected.
+            if (so.getState() == so.getHealthyState() && other.isInfected()) {
+                standbyState = (StandbyState) other.getStandbyState();
+                standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
+
+                standbyState = (StandbyState) so.getStandbyState();
+                standbyState.setMoveOnState(standbyState.getWillbeInfectedMoveOnState());
+            } 
+            // so is infected. and if other is healthy other gets infected.
+            else if (so.isInfected()) {
+                standbyState = (StandbyState) so.getStandbyState();
+                standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
+
+                standbyState = (StandbyState) other.getStandbyState();
+                if (other.isInfected())
+                    standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
+                else
+                    standbyState.setMoveOnState(standbyState.getWillbeInfectedMoveOnState());
+
+            }
+
+            so.setStandby(time);
+            other.setStandby(time);
+            so.setState(so.getStandbyState());
+            other.setState(other.getStandbyState());
+
+            int dx = so.getDx();
+            int dy = so.getDy();
+            so.setDx(dx == other.getDx() ? -dx : dx);
+            so.setDy(dy == other.getDy() ? -dy : dy);
+        }
+
     }
 
 }

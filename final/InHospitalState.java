@@ -22,8 +22,9 @@ public class InHospitalState extends HealthyState {
     }
 
     @Override
-    public void checkCollision(SocialObject other) {
+    public boolean checkCollision(SocialObject other) {
         // intentionally left blank
+        return false;
     }
 
     @Override

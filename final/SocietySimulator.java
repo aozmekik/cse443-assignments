@@ -54,8 +54,9 @@ public class SocietySimulator extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     repaint();
+                    Toolkit.getDefaultToolkit().sync();
                 }
-            });
+            }); 
             timer.start();
 
         }
@@ -77,7 +78,7 @@ public class SocietySimulator extends JFrame {
             g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
             sc.update();
-            sc.paintField(g2d);
+            sc.paint(g2d);
 
             g2d.dispose();
         }

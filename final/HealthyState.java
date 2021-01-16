@@ -5,6 +5,7 @@ import java.awt.Color;
 public class HealthyState implements SocialState {
     protected SocialObject so;
     protected Color color;
+    // FIXME delete sc. or what?
 
     protected static int objectSize = 0, width = 0, height = 0;
     protected static int xlower = 0, xupper = 0, ylower = 0, yupper = 0;
@@ -48,29 +49,8 @@ public class HealthyState implements SocialState {
     }
 
     @Override
-    public void checkCollision(SocialObject other) {
-        if (collides(other)) {
-            int time = (Math.max(so.getC(), other.getC())) * 1000; // in miliseconds.
-
-            if (other.isInfected()) {
-                StandbyState standbyState;
-                standbyState = (StandbyState) other.getStandbyState();
-                standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
-
-                standbyState = (StandbyState) so.getStandbyState();
-                standbyState.setMoveOnState(standbyState.getWillbeInfectedMoveOnState());
-            }
-
-            so.setStandby(time);
-            other.setStandby(time);
-            so.setState(so.getStandbyState());
-            other.setState(other.getStandbyState());
-
-            int dx = so.getDx();
-            int dy = so.getDy();
-            so.setDx(dx == other.getDx() ? -dx : dx);
-            so.setDy(dy == other.getDy() ? -dy : dy);
-        }
+    public boolean checkCollision(SocialObject other) {
+        return collides(other);
     }
 
     @Override

@@ -12,8 +12,9 @@ public class DeadState extends HealthyState {
     }
 
     @Override
-    public void checkCollision(SocialObject other) {
+    public boolean checkCollision(SocialObject other) {
         // intentionally left blank
+        return false;
     }
 
     @Override

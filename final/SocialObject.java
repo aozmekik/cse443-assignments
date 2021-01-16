@@ -30,8 +30,9 @@ public class SocialObject {
     private Random random = new Random();
 
     private float lifetime = 0;
+    private Mediator mediator;
 
-    public SocialObject(int width, int height) {
+    public SocialObject(Mediator mediator, int width, int height) {
         healthyState = new HealthyState(this);
         standbyState = new StandbyState(this);
         infectedState = new InfectedState(this);
@@ -51,6 +52,7 @@ public class SocialObject {
         dx = delta();
         dy = delta();
 
+        this.mediator = mediator;
     }
 
     private int delta() {
@@ -62,7 +64,8 @@ public class SocialObject {
     }
 
     public void checkCollision(SocialObject other) {
-        state.checkCollision(other);
+        if (state.checkCollision(other))
+            mediator.notify(this, other, "collision");
     }
 
     public void paint(Graphics2D g2d) {
@@ -180,13 +183,11 @@ public class SocialObject {
         this.lifetime += x;
     }
 
-    public boolean isInfected()
-    {
+    public boolean isInfected() {
         return getState() instanceof InfectedState;
     }
 
-    public boolean inCanvas()
-    {
+    public boolean inCanvas() {
         return !(getState() instanceof DeadState || getState() instanceof InHospitalState);
     }
 
