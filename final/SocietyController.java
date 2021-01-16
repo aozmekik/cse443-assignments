@@ -4,16 +4,18 @@ import java.util.Map;
 import java.util.Random;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.lang.Thread.State;
 
 import javax.swing.JLabel;
 
 // TODO. start satisfying the goals.
 // TODO. last thing is add gui elements for modify.I
 
-// TODO. Mediator
 // TODO. Producer/Consumer?
 // TODO. flexible gui adding them one by one & bulk.
+// TODO. multithread?
+// TODO. 1-4-5.
+// make array list & remove dead state
+// button for multiple args.
 
 public class SocietyController implements KeyListener, Mediator {
     private final int objectSize = 5;
@@ -42,6 +44,7 @@ public class SocietyController implements KeyListener, Mediator {
         for (int i = 0; i < socialObjects.length; i++)
             socialObjects[i] = new SocialObject(this, width, height);
 
+        values.put("population", P);
         values.put("infected", 1);
         values.put("healthy", P - 1);
         values.put("hospitalized", 0);
