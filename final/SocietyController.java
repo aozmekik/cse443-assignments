@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -5,9 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.security.cert.X509CRL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,7 +18,7 @@ import javax.swing.event.ChangeListener;
 public class SocietyController implements Mediator {
     private final int objectSize = 5;
     private int P = 100;
-    private final int B = P / 100; // B = P / 100
+    private int B = P / 100; // B = P / 100
     private float R = 0.5F + (new Random().nextFloat() * 0.5F); // disease spreading factor [0.5, 1.0]
     private float Z = 0.1F + (new Random().nextFloat() * 0.8F); // disease mortality rate [0.1, 0.9]
     private final int hospitalArrival = 25000; // 25 sec.
@@ -28,6 +26,7 @@ public class SocietyController implements Mediator {
 
     private List<SocialObject> socialObjects = new ArrayList<SocialObject>();
     private List<SocialObject> deads = new ArrayList<SocialObject>();
+    
 
     private Random random = new Random();
 
@@ -46,6 +45,10 @@ public class SocietyController implements Mediator {
     private Map<String, ActionListener> buttonHandlers = new HashMap<String, ActionListener>();
     private Map<String, ChangeListener> sliderHandlers = new HashMap<String, ChangeListener>();
     private final int width, height;
+
+    private Plotter healthyPlotter = new Plotter(values, "healthy");
+    private Plotter infectedPlotter = new Plotter(values, "infected");
+
 
     public SocietyController(int width, int height) {
         this.width = width;
@@ -141,7 +144,7 @@ public class SocietyController implements Mediator {
                 @Override
                 public void stateChanged(ChangeEvent arg0) {
                     values.put(key, sliderObservers.get(key).getValue());
-                    
+
                 }
             });
 
@@ -214,6 +217,7 @@ public class SocietyController implements Mediator {
         }
         values.put("ventilator", values.get("population") / 100);
         updateLabel("ventilator", 0);
+        B = values.get("ventilator");
     }
 
     public void assignButtonHandlers(String key, JButton button) {
@@ -355,4 +359,18 @@ public class SocietyController implements Mediator {
 
     }
 
+
+    public Plotter getInfectedPlotter()
+    {
+        return infectedPlotter;
+    }
+
+    public Plotter getHealthyPlotter()
+    {
+        return healthyPlotter;
+    }
+
+   
+
+   
 }
