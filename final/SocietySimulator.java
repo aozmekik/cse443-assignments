@@ -104,7 +104,8 @@ public class SocietySimulator extends JFrame {
 
         public TextPanel() {
             super();
-            JPanel centerPanel = new JPanel(new GridLayout(0, 5));
+            JPanel centerPanel = new JPanel(new GridLayout(0, 6));
+            labels.put("ventilator", new JLabel("POPULATION: "));
             labels.put("population", new JLabel("POPULATION: "));
             labels.put("infected", new JLabel("INFECTED: "));
             labels.put("healthy", new JLabel("HEALTHY: "));
@@ -135,11 +136,9 @@ public class SocietySimulator extends JFrame {
 
         public PausePanel() {
             super();
-            JLabel labels[] = new JLabel[3];
-            JPanel centerPanel = new JPanel(new GridLayout(3, 0));
-            labels[0] = new JLabel("");
-            labels[1] = new JLabel("Time: ");
-            labels[2] = new JLabel("Press P to Pause.");
+            JLabel labels[] = new JLabel[1];
+            JPanel centerPanel = new JPanel(new GridLayout(1, 0));
+            labels[0] = new JLabel("Time: ");
             centerPanel.setBackground(Color.BLACK);
 
             for (JLabel label : labels) {
@@ -148,9 +147,7 @@ public class SocietySimulator extends JFrame {
                 label.setFont(font);
                 label.setForeground(Color.WHITE);
             }
-            sc.addLabelObserver("state", labels[0]);
-            sc.addLabelObserver("info", labels[2]);
-            sc.addLabelObserver("time", labels[1]);
+            sc.addLabelObserver("time", labels[0]);
 
             int gap = 1;
             setLayout(new BorderLayout(gap, gap));
@@ -247,10 +244,12 @@ public class SocietySimulator extends JFrame {
             Border margin = new EmptyBorder(10, 10, 10, 10);
             addressPanel.setBorder(new CompoundBorder(border, margin));
 
-            JButton buttons[] = new JButton[3];
+            JButton buttons[] = new JButton[4];
             buttons[0] = new JButton("START");
             buttons[1] = new JButton("PAUSE");
-            buttons[2] = new JButton("APPLY OPTIONS");
+            buttons[2] = new JButton("CLEAR");
+            buttons[3] = new JButton("APPLY OPTIONS");
+            
 
             JLabel labels[] = new JLabel[2];
             labels[0] = new JLabel("Mortality Rate: ");
@@ -259,7 +258,9 @@ public class SocietySimulator extends JFrame {
 
             sc.assignButtonHandlers("start", buttons[0]);
             sc.assignButtonHandlers("pause", buttons[1]);
-            sc.assignButtonHandlers("apply", buttons[2]);
+            sc.assignButtonHandlers("clear", buttons[2]);
+            sc.assignButtonHandlers("apply", buttons[3]);
+
 
 
             for (int i = 0; i < labels.length; ++i) {
@@ -284,8 +285,8 @@ public class SocietySimulator extends JFrame {
             addressPanel.setLayout(panelGridBagLayout);
 
             sc.assignSliderHandlers("P", addLabelAndSlider("Population:        ", 0, addressPanel, 0, 2000, 100, 500));
-            sc.assignSliderHandlers("Z", addLabelAndSlider("Mortality Rate [0.1, 0.9]:   ", 1, addressPanel, 10, 90, 5, 10));
-            sc.assignSliderHandlers("R", addLabelAndSlider("Spreading Factor [0.5, 1.0]: ", 2, addressPanel, 50, 100, 5, 10));
+            sc.assignSliderHandlers("mortality", addLabelAndSlider("Mortality Rate [0.1, 0.9]:   ", 1, addressPanel, 10, 90, 5, 10));
+            sc.assignSliderHandlers("spreading", addLabelAndSlider("Spreading Factor [0.5, 1.0]: ", 2, addressPanel, 50, 100, 5, 10));
 
             centerPanel.add(addressPanel);
             centerPanel.add(controlButtons);
@@ -294,7 +295,7 @@ public class SocietySimulator extends JFrame {
             labelPanel.setBackground(Color.BLACK);
             setBackground(Color.BLACK);
 
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; i < 4; ++i) {
                 controlButtons.add(buttons[i]);
                 buttons[i].setFont(font);
                 buttons[i].setForeground(Color.BLACK);

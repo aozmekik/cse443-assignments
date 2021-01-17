@@ -17,19 +17,10 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-// TODO. start satisfying the goals.
-// TODO. last thing is add gui elements for modify.I
-
-// TODO. Producer/Consumer?
-// TODO. flexible gui adding them one by one & bulk.
-// TODO. multithread?
-// TODO. 1-4-5.
-// button for multiple args.
-
 public class SocietyController implements Mediator {
     private final int objectSize = 5;
     private int P = 100;
-    private final int B = P / 100; // FIXME. B = P / 100
+    private final int B = P / 100; // B = P / 100
     private float R = 0.5F + (new Random().nextFloat() * 0.5F); // disease spreading factor [0.5, 1.0]
     private float Z = 0.1F + (new Random().nextFloat() * 0.8F); // disease mortality rate [0.1, 0.9]
     private final int hospitalArrival = 25000; // 25 sec.
@@ -67,13 +58,12 @@ public class SocietyController implements Mediator {
         values.put("infected", 1);
         values.put("healthy", P - 1);
         values.put("hospitalized", 0);
+        values.put("ventilator", B);
         values.put("dead", 0);
         values.put("time", 0);
-        values.put("spreading", (int) (R * 100));
+        values.put("P", P);
         values.put("mortality", (int) (Z * 100));
-        values.put("P", 12);
-        values.put("Z", 12);
-        values.put("R", 12);
+        values.put("spreading", (int) (R * 100));
 
         buttonHandlers.put("start", new ActionListener() {
             @Override
@@ -81,6 +71,7 @@ public class SocietyController implements Mediator {
                 pause = false;
                 buttonObservers.get("start").setEnabled(false);
                 buttonObservers.get("pause").setEnabled(true);
+                updateLog("Continued.");
             }
         });
 
@@ -90,6 +81,26 @@ public class SocietyController implements Mediator {
                 pause = true;
                 buttonObservers.get("start").setEnabled(true);
                 buttonObservers.get("pause").setEnabled(false);
+                updateLog("Paused.");
+            }
+        });
+
+        buttonHandlers.put("clear", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                values.put("population", 0);
+                values.put("infected", 0);
+                values.put("healthy", 0);
+                values.put("hospitalized", 0);
+                values.put("dead", 0);
+                values.put("time", 0);
+                updateLabel("population", 0);
+                updateLabel("infected", 0);
+                updateLabel("healthy", 0);
+                updateLabel("hospitalized", 0);
+                updateLabel("dead", 0);
+                updateLabel("time", 0);
+                socialObjects.clear();
             }
         });
 
@@ -97,6 +108,7 @@ public class SocietyController implements Mediator {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 addIndividiual(1, true);
+                updateLog("Added 1 infected individual.");
             }
         });
 
@@ -104,25 +116,32 @@ public class SocietyController implements Mediator {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 addIndividiual(1, false);
+                updateLog("Added 1 healthy individual.");
             }
         });
 
         buttonHandlers.put("apply", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                R = (float) values.get("R") / 100;
-                Z = (float) values.get("Z") / 100;
+                R = (float) values.get("spreading") / 100;
+                Z = (float) values.get("mortality") / 100;
 
-                // updateLabel("spreading", x);
+                updateLabel("spreading", 0);
+                updateLabel("mortality", 0);
+
+                addIndividiual(values.get("P"), false);
+                updateLog("Update the Spreading Factor.");
+                updateLog("Update the Mortality Rate.");
+                updateLog(String.format("Added %d healthy individual", values.get("P")));
             }
         });
 
-        for (String key : new ArrayList<String>(Arrays.asList("P,Z,R".split(",")))) {
+        for (String key : new ArrayList<String>(Arrays.asList("P,mortality,spreading".split(",")))) {
             sliderHandlers.put(key, new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent arg0) {
                     values.put(key, sliderObservers.get(key).getValue());
-                    System.out.println(values.get(key));
+                    
                 }
             });
 
@@ -187,18 +206,14 @@ public class SocietyController implements Mediator {
             updateLabel("population", 1);
             socialObjects.add(new SocialObject(this, width, height));
             SocialObject last = socialObjects.get(socialObjects.size() - 1);
-            if (infected)
-            {
+            if (infected) {
                 last.setState(last.getInfectedState());
                 updateLabel("infected", 1);
-            }
-            else
+            } else
                 updateLabel("healthy", 1);
         }
-        // P = values.get("population");
-        // FIXME. update some stuff.
-
-
+        values.put("ventilator", values.get("population") / 100);
+        updateLabel("ventilator", 0);
     }
 
     public void assignButtonHandlers(String key, JButton button) {
@@ -209,6 +224,7 @@ public class SocietyController implements Mediator {
     public void assignSliderHandlers(String key, JSlider slider) {
         slider.addChangeListener(sliderHandlers.get(key));
         sliderObservers.put(key, new SliderObserver(slider));
+        sliderObservers.get(key).setValue(values.get(key));
     }
 
     public void addLabelObserver(String key, JLabel label) {
@@ -221,10 +237,6 @@ public class SocietyController implements Mediator {
         values.put(key, values.get(key) + x);
         if (key == "spreading" || key == "mortality") {
             float realValue = ((float) values.get(key)) / 100;
-            // if (key == "spreading")
-            // R = (float) realValue / 100;
-            // else
-            // Z = (float) realValue / 100;
             labelObservers.get(key).update(key.toUpperCase() + ": " + String.format("%.2f", realValue));
         } else
             labelObservers.get(key).update(key.toUpperCase() + ": " + Integer.toString(values.get(key)));
@@ -273,10 +285,10 @@ public class SocietyController implements Mediator {
         public int getValue() {
             return slider.getValue();
         }
-    }
 
-    private void changeState() {
-        pause = !pause;
+        public void setValue(int x) {
+            slider.setValue(x);
+        }
     }
 
     public boolean hospitalFull() {

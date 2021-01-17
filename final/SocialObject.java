@@ -82,7 +82,7 @@ public class SocialObject {
         int dist = Math.min(D, other.D);
         int time = Math.max(C, other.C);
 
-        return R * (1 + (float) (time) / 10F) * M * other.M * (1 - (float) (dist) / 10F);
+        return Math.min(R * (1 + (float) (time) / 10F) * M * other.M * (1 - (float) (dist) / 10F), 1);
     }
 
     public SocialState getHealthyState() {
