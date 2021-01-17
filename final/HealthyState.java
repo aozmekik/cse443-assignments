@@ -5,7 +5,6 @@ import java.awt.Color;
 public class HealthyState implements SocialState {
     protected SocialObject so;
     protected Color color;
-    // FIXME delete sc. or what?
 
     protected static int objectSize = 0, width = 0, height = 0;
     protected static int xlower = 0, xupper = 0, ylower = 0, yupper = 0;

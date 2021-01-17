@@ -19,7 +19,6 @@ public class InfectedState extends HealthyState {
         }
 
         else if (so.getLifetime() >= sc.getInfectedLifetime()) {
-            // so.setState(so.getDeadState());
             sc.toDead(so);
             sc.updateLabel("dead", 1);
             sc.updateLabel("infected", -1);
