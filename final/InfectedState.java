@@ -1,3 +1,11 @@
+
+/**
+ * Infected, part of State Design Pattern implementation.
+ * @see SocialObject
+ * @see SocialState
+ * 
+ */
+
 import java.awt.Color;
 
 public class InfectedState extends HealthyState {
@@ -7,6 +15,10 @@ public class InfectedState extends HealthyState {
         color = Color.RED;
     }
 
+    /**
+     * Updates the infected object's coordinates. Difference is, one infected
+     * must visit the hospital in an interval, also it may die in that interval.
+     */
     @Override
     public void update(int delta) {
         super.update(delta);
@@ -26,8 +38,4 @@ public class InfectedState extends HealthyState {
         }
     }
 
-    @Override
-    public boolean checkCollision(SocialObject other) {
-        return collides(other);
-    }
 }

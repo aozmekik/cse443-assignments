@@ -1,5 +1,16 @@
-import java.awt.Color;
 
+/**
+ * StandByState, part of State Design Pattern implementation.
+ * 
+ * Represents the standby state of social objects in collision.
+ * Also applies another state design pattern inside.
+ * 
+ * @see SocialObject
+ * @see SocialState
+ * 
+ */
+
+import java.awt.Color;
 
 public class StandbyState extends HealthyState {
     private MoveOnState healthyMoveOn = new HealthyMoveOnState(this);
@@ -12,6 +23,10 @@ public class StandbyState extends HealthyState {
         moveOnState = healthyMoveOn;
     }
 
+    /**
+     * Makes sure that objects only spend the time they wait while they wait,
+     * coordinates are not changed.
+     */
     @Override
     public void update(int delta) {
         so.increaseLifetime(delta);
@@ -21,6 +36,10 @@ public class StandbyState extends HealthyState {
             moveOnState.moveOn();
     }
 
+
+    /**
+     * No collision on standby.
+     */
     @Override
     public boolean checkCollision(SocialObject other) {
         // intentionally left blank.
@@ -51,12 +70,12 @@ public class StandbyState extends HealthyState {
     public abstract class MoveOnState {
         protected StandbyState standByState;
 
-        public MoveOnState(StandbyState state)
-        {
+        public MoveOnState(StandbyState state) {
             this.standByState = state;
         }
 
         public abstract void moveOn();
+
         public abstract Color getColor();
     }
 

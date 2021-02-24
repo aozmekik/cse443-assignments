@@ -1,3 +1,15 @@
+
+/**
+ * Plotter represents the plot drawer and constructor for some given 
+ * value range being y coordinate and x coordinate being the time interval
+ * shared among the plotters.
+ *
+ * Applies Observer design pattern for to observe some changes social controller
+ * such as pausing the program.
+ * @see SocialController
+ * @see Observer
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +46,10 @@ public class Plotter extends Observer {
         return list;
     }
 
+    /**
+     * Plots the x, y coordinates to the given graphics object. Plotting is
+     * simulated, lines as multiple circle drawings.
+     */
     public void plot(Graphics2D g2d) {
         if (!pause) {
             if (x.size() <= 200) {

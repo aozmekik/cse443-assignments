@@ -1,3 +1,17 @@
+
+/**
+ * SocialObject
+ * Represents the Model class for the GUI application.
+ * 
+ * Implements the State design pattern for to handle actions on different states of
+ * objects.
+ * Implements the mediator design pattern to handle interaction between social objects.
+ * 
+ * @see Plotter
+ * @see SociaObject
+ * @see SocietySimulator
+ */
+
 import java.util.Random;
 import java.awt.Graphics2D;
 
@@ -13,8 +27,7 @@ public class SocialObject {
     private int D; // social distance causing social interaction
     private float M;
 
-    private static final int maxS = 5; // [0, 5]
-    // private static final int maxM = 1; // [0, 1]
+    private static final int maxS = 500; // [1, 500]
     private static final int maxD = 9; // [0, 9]
     private static final int maxC = 5; // [0, 5]
 
@@ -38,8 +51,8 @@ public class SocialObject {
         inHospitalState = new InHospitalState(this);
         state = healthyState;
 
-        S = random.nextInt(maxS) + 1;
-        M = random.nextFloat();
+        S = random.nextInt(5) + 1;
+        M = ((float) (random.nextInt(90) + 10) / 100) ;
         D = random.nextInt(maxD + 1);
         C = random.nextInt(maxC) + 1;
 
@@ -78,7 +91,7 @@ public class SocialObject {
         return this.state;
     }
 
-    private float infectingProb(int R, SocialObject other) {
+    public float infectingProb(float R, SocialObject other) {
         int dist = Math.min(D, other.D);
         int time = Math.max(C, other.C);
 
@@ -93,10 +106,26 @@ public class SocialObject {
         return this.infectedState;
     }
 
+    public static int getMaxD()
+    {
+        return maxD;
+    }
+
+    public static int getMaxS()
+    {
+        return maxS;
+    }
+
+
+    public static int getMaxC()
+    {
+        return maxC;
+    }
+
+
     public SocialState getStandbyState() {
         return this.standbyState;
     }
-
 
     public SocialState getInHospitalState() {
         return this.inHospitalState;
@@ -105,6 +134,15 @@ public class SocialObject {
     public int getS() {
         return this.S;
     }
+
+    public float getM() {
+        return this.M;
+    }
+
+    public void setM(float M) {
+        this.M = M;
+    }
+
 
     public void setS(int S) {
         this.S = S;

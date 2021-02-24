@@ -1,3 +1,11 @@
+
+/**
+ * HeathyState, part of State Design Pattern implementation.
+ * @see SocialObject
+ * @see SocialState
+ * 
+ */
+
 import java.awt.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.Color;
@@ -16,6 +24,9 @@ public class HealthyState implements SocialState {
         color = Color.WHITE;
     }
 
+    /**
+     * Regular update on an regular healthy social object.
+     */
     @Override
     public void update(int delta) {
         so.increaseLifetime(delta);
@@ -47,17 +58,26 @@ public class HealthyState implements SocialState {
         so.setDy(dy);
     }
 
+    /**
+     * Regular collision on an regular healthy social object with other objects..
+     */
     @Override
     public boolean checkCollision(SocialObject other) {
         return collides(other);
     }
 
+    /**
+     * Regular painting of an regular healthy social object with other objects..
+     */
     @Override
     public void paint(Graphics2D g2d) {
         g2d.setColor(color);
         g2d.fillRect(so.getX(), so.getY(), objectSize, objectSize);
     }
 
+    /**
+     * Sets the settings for some drawing stuff.
+     */
     public static void setSettings(int size, int w, int h, SocietyController sf) {
         objectSize = size;
         width = w;

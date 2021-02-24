@@ -1,4 +1,18 @@
-import java.awt.Color;
+
+/**
+ * SocietyController
+ * Represents the Controller class for the GUI application
+ * Manages the interactions and communication between the view and the model
+ * objects.
+ * 
+ * Implements the mediator design pattern to handle interaction betwen social objects.
+ * Also applies Observer Design Pattern with the Plotter.
+ * 
+ * @see Plotter
+ * @see SociaObject
+ * @see SocietySimulator
+ */
+
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +23,7 @@ import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.crypto.spec.DHPrivateKeySpec;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
@@ -26,7 +41,6 @@ public class SocietyController implements Mediator {
 
     private List<SocialObject> socialObjects = new ArrayList<SocialObject>();
     private List<SocialObject> deads = new ArrayList<SocialObject>();
-    
 
     private Random random = new Random();
 
@@ -46,13 +60,17 @@ public class SocietyController implements Mediator {
     private Map<String, ChangeListener> sliderHandlers = new HashMap<String, ChangeListener>();
     private final int width, height;
 
-    private Plotter healthyPlotter = new Plotter(values, "healthy");
-    private Plotter infectedPlotter = new Plotter(values, "infected");
+    private Plotter healthyPlotter;
+    private Plotter infectedPlotter;
 
+    private List<Observer> observers = new ArrayList<Observer>();
 
     public SocietyController(int width, int height) {
         this.width = width;
         this.height = height;
+
+        healthyPlotter = new Plotter(this, values, "dead");
+        infectedPlotter = new Plotter(this, values, "infected");
 
         for (int i = 0; i < P; i++)
             socialObjects.add(new SocialObject(this, width, height));
@@ -68,6 +86,8 @@ public class SocietyController implements Mediator {
         values.put("mortality", (int) (Z * 100));
         values.put("spreading", (int) (R * 100));
 
+        readAvarageFactors();
+
         buttonHandlers.put("start", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -75,6 +95,7 @@ public class SocietyController implements Mediator {
                 buttonObservers.get("start").setEnabled(false);
                 buttonObservers.get("pause").setEnabled(true);
                 updateLog("Continued.");
+                notifyAllObservers();
             }
         });
 
@@ -85,6 +106,7 @@ public class SocietyController implements Mediator {
                 buttonObservers.get("start").setEnabled(true);
                 buttonObservers.get("pause").setEnabled(false);
                 updateLog("Paused.");
+                notifyAllObservers();
             }
         });
 
@@ -128,18 +150,19 @@ public class SocietyController implements Mediator {
             public void actionPerformed(ActionEvent arg0) {
                 R = (float) values.get("spreading") / 100;
                 Z = (float) values.get("mortality") / 100;
+                updateInfectedLifetime();
 
                 updateLabel("spreading", 0);
                 updateLabel("mortality", 0);
 
                 addIndividiual(values.get("P"), false);
-                updateLog("Update the Spreading Factor.");
-                updateLog("Update the Mortality Rate.");
+                updateLog("Updated the Constant Factors.");
                 updateLog(String.format("Added %d healthy individual", values.get("P")));
+                writeAvarageFactors();
             }
         });
 
-        for (String key : new ArrayList<String>(Arrays.asList("P,mortality,spreading".split(",")))) {
+        for (String key : new ArrayList<String>(Arrays.asList("P,mortality,spreading,C,M,D,S".split(",")))) {
             sliderHandlers.put(key, new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent arg0) {
@@ -160,6 +183,72 @@ public class SocietyController implements Mediator {
         // random infected among the population
         SocialObject so = socialObjects.get(random.nextInt(P));
         so.setState(so.getInfectedState());
+    }
+
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void notifyAllObservers() {
+        for (Observer observer : observers) {
+            observer.update();
+        }
+    }
+
+    private void readAvarageFactors() {
+        int C = 0, S = 0, D = 0;
+        float M = 0;
+        for (SocialObject socialObject : socialObjects) {
+            C += socialObject.getC();
+            M += socialObject.getM();
+            S += socialObject.getS();
+            D += socialObject.getD();
+        }
+
+        C /= socialObjects.size();
+        S /= socialObjects.size();
+        D /= socialObjects.size();
+        M /= socialObjects.size();
+
+        values.put("C", C);
+        values.put("M", (int) M * 100);
+        values.put("D", D);
+        values.put("S", S);
+    }
+
+    private int[] generateRandomWithMean(int max, int mean, int size) {
+        int[] list = new int[size];
+        for (int i = 0; i + 1 < size; i += 2) {
+            list[i] = random.nextInt(max) + 1;
+            if (list[i] > mean * 2)
+                list[i + 1] = 1;
+            else
+                list[i + 1] = Math.min(max, (mean * 2) - list[i]);
+            if (list[i + 1] == 0)
+                list[i + 1] = 1;
+        }
+        return list;
+    }
+
+    private void writeAvarageFactors() {
+        int C = values.get("C");
+        int S = values.get("S");
+        int D = values.get("D");
+        int M = values.get("M");
+
+        int size = socialObjects.size();
+        int[] Clist = generateRandomWithMean(C, C, size);
+        int[] Slist = generateRandomWithMean(S, S, size);
+        int[] Dlist = generateRandomWithMean(D, D, size);
+        int[] Mlist = generateRandomWithMean(100, M, size);
+
+        for (int i = 0; i < size; ++i) {
+            socialObjects.get(i).setC(Clist[i]);
+            socialObjects.get(i).setS(Slist[i]);
+            socialObjects.get(i).setD(Dlist[i]);
+            socialObjects.get(i).setM(((float) Mlist[i]) / 100);
+        }
+
     }
 
     public void update() {
@@ -223,6 +312,10 @@ public class SocietyController implements Mediator {
     public void assignButtonHandlers(String key, JButton button) {
         button.addActionListener(buttonHandlers.get(key));
         buttonObservers.put(key, new ButtonObserver(button));
+    }
+
+    private void updateInfectedLifetime() {
+        infectedLifetime = (100 * (1 - Z)) * 1000;
     }
 
     public void assignSliderHandlers(String key, JSlider slider) {
@@ -330,18 +423,20 @@ public class SocietyController implements Mediator {
                 standbyState = (StandbyState) other.getStandbyState();
                 standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
 
-                standbyState = (StandbyState) so.getStandbyState();
-                standbyState.setMoveOnState(standbyState.getWillbeInfectedMoveOnState());
+                if (other.infectingProb(R, so) >= 0.5F) {
+                    standbyState = (StandbyState) so.getStandbyState();
+                    standbyState.setMoveOnState(standbyState.getWillbeInfectedMoveOnState());
+
+                }
             }
             // so is infected. and if other is healthy other gets infected.
             else if (so.isInfected()) {
                 standbyState = (StandbyState) so.getStandbyState();
                 standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
-
                 standbyState = (StandbyState) other.getStandbyState();
                 if (other.isInfected())
                     standbyState.setMoveOnState(standbyState.getInfectedMoveOnState());
-                else
+                else if (so.infectingProb(R, other) >= 0.5F)
                     standbyState.setMoveOnState(standbyState.getWillbeInfectedMoveOnState());
 
             }
@@ -359,18 +454,12 @@ public class SocietyController implements Mediator {
 
     }
 
-
-    public Plotter getInfectedPlotter()
-    {
+    public Plotter getInfectedPlotter() {
         return infectedPlotter;
     }
 
-    public Plotter getHealthyPlotter()
-    {
+    public Plotter getHealthyPlotter() {
         return healthyPlotter;
     }
 
-   
-
-   
 }

@@ -1,10 +1,20 @@
 
+/***
+ * 
+ * SocietySimulator
+ * Represents the View class of the MVC design pattern.
+ * Constructs and manages the hierarcy between the GUI components and
+ * reads the controller object to update the view.
+ * 
+ * @see SocialObject
+ * @see SocietyController
+ */
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,9 +31,7 @@ import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
-import javax.swing.SpringLayout;
 
 public class SocietySimulator extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -137,23 +145,16 @@ public class SocietySimulator extends JFrame {
 
         public PausePanel() {
             super();
-            JLabel labels[] = new JLabel[1];
-            JPanel centerPanel = new JPanel(new GridLayout(1, 0));
-            labels[0] = new JLabel("Time: ");
-            centerPanel.setBackground(Color.BLACK);
+            JLabel label = new JLabel("Time: ");
 
-            for (JLabel label : labels) {
-                centerPanel.add(label);
-                label.setHorizontalAlignment(JLabel.CENTER);
-                label.setFont(font);
-                label.setForeground(Color.WHITE);
-            }
-            sc.addLabelObserver("time", labels[0]);
+            label.setFont(font);
+            label.setForeground(Color.WHITE);
+            sc.addLabelObserver("time", label);
 
             int gap = 1;
             setLayout(new BorderLayout(gap, gap));
             setBorder(BorderFactory.createEmptyBorder(gap, gap, gap, gap));
-            add(centerPanel, BorderLayout.EAST);
+            add(label, BorderLayout.EAST);
             add(new LogPanel(), BorderLayout.WEST);
             setBackground(Color.BLACK);
         }
@@ -195,7 +196,7 @@ public class SocietySimulator extends JFrame {
 
         public RightPanel() {
             super();
-            JPanel centerPanel = new JPanel(new GridLayout(5, 0, 50, 50));
+            JPanel centerPanel = new JPanel(new GridLayout(6, 0, 0, 0));
             JPanel controlButtons = new JPanel(new FlowLayout());
 
             JButton buttons[] = new JButton[2];
@@ -215,6 +216,25 @@ public class SocietySimulator extends JFrame {
                 buttons[i].setBackground(Color.WHITE);
             }
 
+            JPanel labelPanel = new JPanel(new FlowLayout());
+
+            JLabel labels[] = new JLabel[2];
+            labels[0] = new JLabel("mortality: ");
+            labels[1] = new JLabel("spreading: ");
+
+
+
+            for (int i = 0; i < labels.length; ++i) {
+                labelPanel.add(labels[i]);
+                labels[i].setFont(font);
+                labels[i].setForeground(Color.WHITE);
+            }
+
+            sc.addLabelObserver("mortality", labels[0]);
+            sc.addLabelObserver("spreading", labels[1]);
+
+            labelPanel.setBackground(Color.BLACK);
+
             PlotPanel plotPanel1 = new PlotPanel(100, 100, sc.getHealthyPlotter());
             PlotPanel plotPanel2 = new PlotPanel(100, 100, sc.getInfectedPlotter());
             plotPanel1.setBorder(BorderFactory.createLineBorder(Color.RED));
@@ -223,6 +243,7 @@ public class SocietySimulator extends JFrame {
             centerPanel.add(controlButtons);
             centerPanel.add(plotPanel1);
             centerPanel.add(plotPanel2);
+            centerPanel.add(labelPanel);
 
             int gap = 25;
             setLayout(new BorderLayout(gap, gap));
@@ -240,9 +261,9 @@ public class SocietySimulator extends JFrame {
 
         public LeftPanel() {
             super();
-            JPanel centerPanel = new JPanel(new GridLayout(3, 0, 50, 50));
+            JPanel centerPanel = new JPanel();
+            centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
             JPanel controlButtons = new JPanel(new FlowLayout());
-            JPanel labelPanel = new JPanel(new FlowLayout(0, 30, 30));
 
             JPanel addressPanel = new JPanel();
             Border border = addressPanel.getBorder();
@@ -255,23 +276,10 @@ public class SocietySimulator extends JFrame {
             buttons[2] = new JButton("CLEAR");
             buttons[3] = new JButton("APPLY OPTIONS");
 
-            JLabel labels[] = new JLabel[2];
-            labels[0] = new JLabel("Mortality Rate: ");
-            labels[1] = new JLabel("Spreading Factor: ");
-
             sc.assignButtonHandlers("start", buttons[0]);
             sc.assignButtonHandlers("pause", buttons[1]);
             sc.assignButtonHandlers("clear", buttons[2]);
             sc.assignButtonHandlers("apply", buttons[3]);
-
-            for (int i = 0; i < labels.length; ++i) {
-                labelPanel.add(labels[i]);
-                labels[i].setFont(font);
-                labels[i].setForeground(Color.WHITE);
-            }
-
-            sc.addLabelObserver("mortality", labels[0]);
-            sc.addLabelObserver("spreading", labels[1]);
 
             centerPanel.setBackground(Color.BLACK);
             controlButtons.setBackground(Color.BLACK);
@@ -283,17 +291,22 @@ public class SocietySimulator extends JFrame {
             panelGridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
             addressPanel.setLayout(panelGridBagLayout);
 
-            sc.assignSliderHandlers("P", addLabelAndSlider("Population:        ", 0, addressPanel, 0, 1000, 100, 500));
+            sc.assignSliderHandlers("P", addLabelAndSlider("Population:        ", 0, addressPanel, 0, 50, 10, 25));
             sc.assignSliderHandlers("mortality",
-                    addLabelAndSlider("Mortality Rate [0.1, 0.9]:   ", 1, addressPanel, 10, 90, 5, 10));
+                    addLabelAndSlider("Mortality Rate (%):   ", 1, addressPanel, 10, 90, 5, 10));
             sc.assignSliderHandlers("spreading",
-                    addLabelAndSlider("Spreading Factor [0.5, 1.0]: ", 2, addressPanel, 50, 100, 5, 10));
+                    addLabelAndSlider("Spreading Factor (%): ", 2, addressPanel, 50, 100, 5, 10));
+            sc.assignSliderHandlers("M", addLabelAndSlider("Mask (1.0 = Not Mask):", 3, addressPanel, 10, 100, 5, 10));
+            sc.assignSliderHandlers("S", addLabelAndSlider("Speed:", 4, addressPanel, 1, 500, 50, 249));
+            sc.assignSliderHandlers("D", addLabelAndSlider("Distance:", 5, addressPanel, 1, 9, 1, 9));
+            sc.assignSliderHandlers("C", addLabelAndSlider("Sociality:", 6, addressPanel, 1, 5, 1, 4));
+
+
+
 
             centerPanel.add(addressPanel);
             centerPanel.add(controlButtons);
-            centerPanel.add(labelPanel);
             addressPanel.setBackground(Color.BLACK);
-            labelPanel.setBackground(Color.BLACK);
             setBackground(Color.BLACK);
 
             for (int i = 0; i < 4; ++i) {
@@ -341,7 +354,6 @@ public class SocietySimulator extends JFrame {
         return slider;
     }
 
-   
     class PlotPanel extends JPanel {
 
         private static final long serialVersionUID = 1L;
@@ -360,9 +372,9 @@ public class SocietySimulator extends JFrame {
                 }
             });
             timer.start();
-            
-            JTextField textField = new JTextField(plotter.getKey() + "/time");
-            textField.setBackground( new Color(255, 0, 0, 20));
+
+            JTextField textField = new JTextField(plotter.getKey());
+            textField.setBackground(new Color(255, 0, 0, 20));
             textField.setFont(new Font("Verdana", Font.PLAIN, 12));
             textField.setBorder(BorderFactory.createEmptyBorder());
             textField.setForeground(Color.WHITE);
